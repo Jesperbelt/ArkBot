@@ -13,7 +13,8 @@ namespace DoD
         public DbSet<Color> color { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySQL("server=192.168.1.99;database=bot_test;user=DoD;password=%%Truckers**;SSL Mode=None");
+            string mysql = System.IO.File.ReadAllText(@"C:\db.txt");
+            optionsBuilder.UseMySQL(mysql);
         }
     }
 }
