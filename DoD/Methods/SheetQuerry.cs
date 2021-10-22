@@ -5,6 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
+using DoD;
+
 
 namespace DoD
 {
@@ -15,8 +22,9 @@ namespace DoD
         static readonly string SpreadsheetId = "1XxR4kmRh2vy4Sg_d4HvrcZQwtAkCCEPUTTAoOXBIlyE";
         static readonly string sheet = "BankData";
         static SheetsService service;
-
-        public void Sheet()
+        DbQuerry dbmethod = new DbQuerry();
+        static DateTime then;
+        public void SelectSheet()
         {
             GoogleCredential credential;
             using(var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
@@ -29,11 +37,31 @@ namespace DoD
                 HttpClientInitializer = credential,
                 ApplicationName = ApplicationName,
             });
-            ReadEntries();
+            DateTime rightnow = DateTime.Now;
+            DateTime unset = DateTime.Parse("1/1/0001 12:00:00 AM");
+            Console.WriteLine(unset);
+            Console.WriteLine(then);
+            if(!(then==unset))
+            {
+                if (then.CompareTo(rightnow) > 0)
+                {
+                    updateDB();
+                }
+                else
+                {
+                    Console.WriteLine("Te vroeg");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Update because then == unset");
+                updateDB();
+            }
         }
-        void ReadEntries()
+        void updateDB()
         {
-            var range = $"{sheet}!B2:B2";
+            int max = dbmethod.SelectLineId("DoD");
+            var range = $"{sheet}!A{max+1}:K5757";
             var request = service.Spreadsheets.Values.Get(SpreadsheetId, range);
             var response = request.Execute();
             var values = response.Values;
@@ -41,8 +69,36 @@ namespace DoD
             {
                 foreach(var row in values)
                 {
-                    Console.WriteLine(row[0]);
+                    Console.WriteLine($"{row[0]} | {row[1]} | {row[2]} | {row[3]} | {row[4]} | {row[5]} | {row[6]} | {row[7]} | {row[8]} | {row[9]} | {row[10]}");
+                    List<Person_info> temp = new List<Person_info>();
+                    temp = dbmethod.SelectPersonName("DoD", (string)row[1]);
+                    long? id = null;
+                    if (temp.Count>0)
+                    {
+                        id = temp[0].id;
+                    }
+                    var context = new DoD_Context();
+                    var std = new Data_bank()
+                    {
+                        id = id,
+                        lineid = Int32.Parse((string)row[0]),
+                        name = (string)row[1],
+                        date = (string)row[2],
+                        guild = (string)row[3],
+                        type = (string)row[4],
+                        food = Double.Parse((string)row[5]),
+                        parts = Double.Parse((string)row[6]),
+                        electric = Double.Parse((string)row[7]),
+                        gas = Double.Parse((string)row[8]),
+                        cash = Double.Parse((string)row[9]),
+                        shadow = Double.Parse((string)row[10]),
+                    };
+                    context.data_bank.Add(std);
+                    context.SaveChanges();
                 }
+                Console.WriteLine(DateTime.Now);
+                Console.WriteLine(DateTime.Now.AddHours(1));
+                then = DateTime.Now.AddHours(1);
             }
             else
             {

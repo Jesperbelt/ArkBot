@@ -16,7 +16,8 @@ namespace Modules
         {
             DoD = 684822117618811140,
             SHR = 696820705651720342,
-            SAO = 772805666280308757
+            SAO = 772805666280308757,
+            test = 643371773290610688
         };
         long food;
         long parts;
@@ -24,12 +25,12 @@ namespace Modules
         long gas;
         long cash;
         long shadow;
-        int Ftotal = 0;
-        int Ptotal = 0;
-        int Etotal = 0;
-        int Gtotal = 0;
-        int Ctotal = 0;
-        int Stotal = 0;
+        double Ftotal = 0;
+        double Ptotal = 0;
+        double Etotal = 0;
+        double Gtotal = 0;
+        double Ctotal = 0;
+        double Stotal = 0;
         DbQuerry dbmethod = new DbQuerry();
         [Command("total")]
         public async Task Total(IGuildUser user = null)
@@ -41,6 +42,8 @@ namespace Modules
             }
             if (Context.Guild.Id == (ulong)guilds.DoD)
             {
+                SheetQuerry sheetQuerry = new SheetQuerry();
+                sheetQuerry.SelectSheet();
                 List<Data_bank> rss = new List<Data_bank>();
                 List<DoD.Color> color = new List<DoD.Color>();
                 DbQuerry t = new DbQuerry();
@@ -61,7 +64,7 @@ namespace Modules
                 gas = color[0].gas;
                 cash = color[0].cash;
                 shadow = color[0].shadow;
-                await ReplyAsync($"{rss[0].name} has in Personal:\n<@&{food}>: {Ftotal}M\n<@&{parts}>: {Ptotal}M\n<@&{electric}>: {Etotal}M\n<@&{gas}>: {Gtotal}M\n<@&{cash}>: {Ctotal}M\n<@&{shadow}>: {Stotal}");
+                await ReplyAsync($"{rss[0].name} has in Personal:\n<@&{food}>: {Math.Round(Ftotal)}M\n<@&{parts}>: {Math.Round(Ptotal)}M\n<@&{electric}>: {Math.Round(Etotal)}M\n<@&{gas}>: {Math.Round(Gtotal)}M\n<@&{cash}>: {Math.Round(Ctotal)}M\n<@&{shadow}>: {Stotal}");
             }
         }
         [Command("tracker")]
@@ -74,12 +77,14 @@ namespace Modules
             }
             if (Context.Guild.Id == (ulong)guilds.DoD)
             {
+                SheetQuerry sheetQuerry = new SheetQuerry();
+                sheetQuerry.SelectSheet();
                 List<Data_bank> rss = new List<Data_bank>();
                 List<DoD.Color> color = new List<DoD.Color>();
                 List<Person_info> person_info = new List<Person_info>();
                 rss = dbmethod.SelectRss("DoD", "guild", userid);
                 color = dbmethod.SelectColor("DoD");
-                person_info = dbmethod.SelectPerson("DoD", userid);
+                person_info = dbmethod.SelectPersonID("DoD", userid);
                 foreach (var row in rss)
                 {
                     Ftotal += row.food;
@@ -143,7 +148,7 @@ namespace Modules
             if (Context.Guild.Id == (ulong)guilds.DoD)
             {
                 List<Person_info> person_info = new List<Person_info>();
-                person_info = dbmethod.SelectPerson("DoD", userid);
+                person_info = dbmethod.SelectPersonID("DoD", userid);
                 if (!(person_info[0].id > 0))
                 {
                     dbmethod.InsertPerson("DoD", userid, name);

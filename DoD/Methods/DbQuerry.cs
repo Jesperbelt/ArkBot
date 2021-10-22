@@ -19,6 +19,18 @@ namespace DoD
             }
             return rss;
         }
+        public int SelectLineId(string guild)
+        {
+            int maxnumb = 0;
+            if (guild == "DoD")
+            {
+                var context = new DoD_Context();
+                maxnumb = context.data_bank.AsQueryable()
+                .Max(d => d.lineid);
+                Console.WriteLine(maxnumb);
+            }
+            return maxnumb;
+        }
         public List<Color> SelectColor(string guild)
         {
             List<Color> color = new List<Color>();
@@ -31,7 +43,7 @@ namespace DoD
             }
             return color;
         }
-        public List<Person_info> SelectPerson(string guild,long userid)
+        public List<Person_info> SelectPersonID(string guild,long userid)
         {
             List<Person_info> person = new List<Person_info>();
             if (guild == "DoD")
@@ -40,6 +52,31 @@ namespace DoD
                 person = context.person_info.AsQueryable()
                 .Where(row => row.id == userid)
                 .ToList();
+            }
+            return person;
+        }
+        public List<Person_info> SelectPersonName(string guild, string uname)
+        {
+            List<Person_info> person = new List<Person_info>();
+            if (guild == "DoD")
+            {
+                var context = new DoD_Context();
+                try
+                {
+                    person = context.person_info.AsQueryable()
+                    .Where(row => row.name == uname)
+                    .ToList();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+            if (person == null)
+            {
+                List<Person_info> nan = new List<Person_info>();
+                nan[0].id = 0;
+                return nan;
             }
             return person;
         }
@@ -57,8 +94,6 @@ namespace DoD
                 };
                 context.person_info.Add(std);
                 context.SaveChanges();
-
-
             }
         }
     }
