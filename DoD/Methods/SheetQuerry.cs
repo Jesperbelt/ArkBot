@@ -39,8 +39,6 @@ namespace DoD
             });
             DateTime rightnow = DateTime.Now;
             DateTime unset = DateTime.Parse("1/1/0001 12:00:00 AM");
-            Console.WriteLine(unset);
-            Console.WriteLine(then);
             if(!(then==unset))
             {
                 if (then.CompareTo(rightnow) > 0)
@@ -49,19 +47,20 @@ namespace DoD
                 }
                 else
                 {
-                    Console.WriteLine("Te vroeg");
+                    Console.WriteLine("Not Update DB");
                 }
             }
             else
             {
-                Console.WriteLine("Update because then == unset");
+                Console.WriteLine("Update DB");
                 updateDB();
             }
         }
         void updateDB()
         {
             int max = dbmethod.SelectLineId("DoD");
-            var range = $"{sheet}!A{max+1}:K5757";
+            if (max > 2) { max = max + 2; };
+            var range = $"{sheet}!A{max}:K5757";
             var request = service.Spreadsheets.Values.Get(SpreadsheetId, range);
             var response = request.Execute();
             var values = response.Values;
@@ -96,8 +95,6 @@ namespace DoD
                     context.data_bank.Add(std);
                     context.SaveChanges();
                 }
-                Console.WriteLine(DateTime.Now);
-                Console.WriteLine(DateTime.Now.AddHours(1));
                 then = DateTime.Now.AddHours(1);
             }
             else

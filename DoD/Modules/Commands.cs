@@ -40,7 +40,7 @@ namespace Modules
             {
                 userid = (long)user.Id;
             }
-            if (Context.Guild.Id == (ulong)guilds.DoD)
+            if (Context.Guild.Id == (ulong)guilds.test)
             {
                 SheetQuerry sheetQuerry = new SheetQuerry();
                 sheetQuerry.SelectSheet();

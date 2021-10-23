@@ -25,9 +25,16 @@ namespace DoD
             if (guild == "DoD")
             {
                 var context = new DoD_Context();
-                maxnumb = context.data_bank.AsQueryable()
+                try
+                {
+                    maxnumb = context.data_bank.AsQueryable()
                 .Max(d => d.lineid);
-                Console.WriteLine(maxnumb);
+                    Console.WriteLine(maxnumb);
+                }
+                catch (Exception e)
+                {
+                    maxnumb = 2;
+                }
             }
             return maxnumb;
         }
