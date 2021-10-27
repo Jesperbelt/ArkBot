@@ -109,23 +109,23 @@ namespace Modules
                     string message2 = ($"\n{rss[0].name} owes the Guild:\n");
                     if (Ftotal < days)
                     {
-                        message2 += ($"<@&{food}>: {Math.Round(days - Ftotal,2)}\n");
+                        message2 += ($"<@&{food}>: {Math.Round(days - Ftotal,2)}M\n");
                     }
                     if (Ptotal < days)
                     {
-                        message2 += ($"<@&{parts}>: {Math.Round(days - Ptotal,2)}\n");
+                        message2 += ($"<@&{parts}>: {Math.Round(days - Ptotal,2)}M\n");
                     }
                     if (Etotal < days)
                     {
-                        message2 += ($"<@&{electric}>: {Math.Round(days - Etotal,2)}\n");
+                        message2 += ($"<@&{electric}>: {Math.Round(days - Etotal,2)}M\n");
                     }
                     if (Gtotal < days)
                     {
-                        message2 += ($"<@&{gas}>: {Math.Round(days - Gtotal,2)}\n");
+                        message2 += ($"<@&{gas}>: {Math.Round(days - Gtotal,2)}M\n");
                     }
                     if (Ctotal < days)
                     {
-                        message2 += ($"<@&{cash}>: {Math.Round(days - Ctotal,2)}\n");
+                        message2 += ($"<@&{cash}>: {Math.Round(days - Ctotal,2)}M\n");
                     }
                     await ReplyAsync(message1+message2);
                 }
