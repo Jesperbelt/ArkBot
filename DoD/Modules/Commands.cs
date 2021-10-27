@@ -40,7 +40,7 @@ namespace Modules
             {
                 userid = (long)user.Id;
             }
-            if (Context.Guild.Id == (ulong)guilds.test)
+            if (Context.Guild.Id == (ulong)guilds.DoD)
             {
                 SheetQuerry sheetQuerry = new SheetQuerry();
                 sheetQuerry.SelectSheet();
@@ -64,7 +64,7 @@ namespace Modules
                 gas = color[0].gas;
                 cash = color[0].cash;
                 shadow = color[0].shadow;
-                await ReplyAsync($"{rss[0].name} has in Personal:\n<@&{food}>: {Math.Round(Ftotal)}M\n<@&{parts}>: {Math.Round(Ptotal)}M\n<@&{electric}>: {Math.Round(Etotal)}M\n<@&{gas}>: {Math.Round(Gtotal)}M\n<@&{cash}>: {Math.Round(Ctotal)}M\n<@&{shadow}>: {Stotal}");
+                await ReplyAsync($"{rss[0].name} has in Personal:\n<@&{food}>: {Math.Round(Ftotal,2)}M\n<@&{parts}>: {Math.Round(Ptotal,2)}M\n<@&{electric}>: {Math.Round(Etotal,2)}M\n<@&{gas}>: {Math.Round(Gtotal,2)}M\n<@&{cash}>: {Math.Round(Ctotal,2)}M\n<@&{shadow}>: {Stotal}");
             }
         }
         [Command("tracker")]
@@ -100,7 +100,7 @@ namespace Modules
                 gas = color[0].gas;
                 cash = color[0].cash;
                 shadow = color[0].shadow;
-                string message1=($"{rss[0].name} has in Guild:\n<@&{food}>: {Ftotal}M\n<@&{parts}>: {Ptotal}M\n<@&{electric}>: {Etotal}M\n<@&{gas}>: {Gtotal}M\n<@&{cash}>: {Ctotal}M\n<@&{shadow}>: {Stotal}");
+                string message1=($"{rss[0].name} has in Guild:\n<@&{food}>: {Math.Round(Ftotal,2)}M\n<@&{parts}>: {Math.Round(Ptotal,2)}M\n<@&{electric}>: {Math.Round(Etotal,2)}M\n<@&{gas}>: {Math.Round(Gtotal,2)}M\n<@&{cash}>: {Math.Round(Ctotal,2)}M\n<@&{shadow}>: {Stotal}");
                 DateTime Enddate = DateTime.Now;
                 DateTime Startdate = Convert.ToDateTime(person_info[0].startdate);
                 int days = ((int)(Enddate - Startdate).TotalDays/7);
@@ -109,23 +109,23 @@ namespace Modules
                     string message2 = ($"\n{rss[0].name} owes the Guild:\n");
                     if (Ftotal < days)
                     {
-                        message2 += ($"<@&{food}>: {days - Ftotal}\n");
+                        message2 += ($"<@&{food}>: {Math.Round(days - Ftotal,2)}\n");
                     }
                     if (Ptotal < days)
                     {
-                        message2 += ($"<@&{parts}>: {days - Ptotal}\n");
+                        message2 += ($"<@&{parts}>: {Math.Round(days - Ptotal,2)}\n");
                     }
                     if (Etotal < days)
                     {
-                        message2 += ($"<@&{electric}>: {days - Etotal }\n");
+                        message2 += ($"<@&{electric}>: {Math.Round(days - Etotal,2)}\n");
                     }
                     if (Gtotal < days)
                     {
-                        message2 += ($"<@&{gas}>: {days - Gtotal }\n");
+                        message2 += ($"<@&{gas}>: {Math.Round(days - Gtotal,2)}\n");
                     }
                     if (Ctotal < days)
                     {
-                        message2 += ($"<@&{cash}>: {days - Ctotal}\n");
+                        message2 += ($"<@&{cash}>: {Math.Round(days - Ctotal,2)}\n");
                     }
                     await ReplyAsync(message1+message2);
                 }
