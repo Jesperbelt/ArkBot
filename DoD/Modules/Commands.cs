@@ -45,26 +45,42 @@ namespace Modules
                 SheetQuerry sheetQuerry = new SheetQuerry();
                 sheetQuerry.SelectSheet();
                 List<Data_bank> rss = new List<Data_bank>();
+                List<Person_info> person_info = new List<Person_info>();
                 List<DoD.Color> color = new List<DoD.Color>();
                 DbQuerry t = new DbQuerry();
-                rss = t.SelectRss("DoD","personal", userid);
-                color = t.SelectColor("DoD");
-                foreach (var row in rss)
+                try
                 {
-                    Ftotal += row.food;
-                    Ptotal += row.parts;
-                    Etotal += row.electric;
-                    Gtotal += row.gas;
-                    Ctotal += row.cash;
-                    Stotal += row.shadow;
+                    rss = t.SelectRss("DoD", "personal", userid);
+                    person_info = dbmethod.SelectPersonID("DoD", userid);
+                    color = t.SelectColor("DoD");
                 }
-                food = color[0].food;
-                parts = color[0].parts;
-                electric = color[0].electric;
-                gas = color[0].gas;
-                cash = color[0].cash;
-                shadow = color[0].shadow;
-                await ReplyAsync($"{rss[0].name} has in Personal:\n<@&{food}>: {Math.Round(Ftotal,2)}M\n<@&{parts}>: {Math.Round(Ptotal,2)}M\n<@&{electric}>: {Math.Round(Etotal,2)}M\n<@&{gas}>: {Math.Round(Gtotal,2)}M\n<@&{cash}>: {Math.Round(Ctotal,2)}M\n<@&{shadow}>: {Stotal}");
+                catch (Exception e)
+                {
+
+                }
+                if (person_info.Count > 0)
+                {
+                    foreach (var row in rss)
+                    {
+                        Ftotal += row.food;
+                        Ptotal += row.parts;
+                        Etotal += row.electric;
+                        Gtotal += row.gas;
+                        Ctotal += row.cash;
+                        Stotal += row.shadow;
+                    }
+                    food = color[0].food;
+                    parts = color[0].parts;
+                    electric = color[0].electric;
+                    gas = color[0].gas;
+                    cash = color[0].cash;
+                    shadow = color[0].shadow;
+                    await ReplyAsync($"{person_info[0].name} has in Personal:\n<@&{food}>: {Math.Round(Ftotal, 2)}M\n<@&{parts}>: {Math.Round(Ptotal, 2)}M\n<@&{electric}>: {Math.Round(Etotal, 2)}M\n<@&{gas}>: {Math.Round(Gtotal, 2)}M\n<@&{cash}>: {Math.Round(Ctotal, 2)}M\n<@&{shadow}>: {Stotal}");
+                }
+                else
+                {
+                    await ReplyAsync($"You dont exist please perform `!add`");
+                }
             }
         }
         [Command("tracker")]
@@ -82,57 +98,74 @@ namespace Modules
                 List<Data_bank> rss = new List<Data_bank>();
                 List<DoD.Color> color = new List<DoD.Color>();
                 List<Person_info> person_info = new List<Person_info>();
-                rss = dbmethod.SelectRss("DoD", "guild", userid);
-                color = dbmethod.SelectColor("DoD");
-                person_info = dbmethod.SelectPersonID("DoD", userid);
-                foreach (var row in rss)
+                try
                 {
-                    Ftotal += row.food;
-                    Ptotal += row.parts;
-                    Etotal += row.electric;
-                    Gtotal += row.gas;
-                    Ctotal += row.cash;
-                    Stotal += row.shadow;
+                    rss = dbmethod.SelectRss("DoD", "guild", userid);
+                    color = dbmethod.SelectColor("DoD");
+                    person_info = dbmethod.SelectPersonID("DoD", userid);
                 }
-                food = color[0].food;
-                parts = color[0].parts;
-                electric = color[0].electric;
-                gas = color[0].gas;
-                cash = color[0].cash;
-                shadow = color[0].shadow;
-                string message1=($"{rss[0].name} has in Guild:\n<@&{food}>: {Math.Round(Ftotal,2)}M\n<@&{parts}>: {Math.Round(Ptotal,2)}M\n<@&{electric}>: {Math.Round(Etotal,2)}M\n<@&{gas}>: {Math.Round(Gtotal,2)}M\n<@&{cash}>: {Math.Round(Ctotal,2)}M\n<@&{shadow}>: {Stotal}");
-                DateTime Enddate = DateTime.Now;
-                DateTime Startdate = Convert.ToDateTime(person_info[0].startdate);
-                int days = ((int)(Enddate - Startdate).TotalDays/7);
-                if (Ftotal<days || Ptotal < days|| Etotal < days|| Gtotal < days|| Ctotal < days)
+                catch (Exception e)
                 {
-                    string message2 = ($"\n{rss[0].name} owes the Guild:\n");
-                    if (Ftotal < days)
+
+                }
+                if (person_info.Count > 0)
+                {
+
+
+                    foreach (var row in rss)
                     {
-                        message2 += ($"<@&{food}>: {Math.Round(days - Ftotal,2)}M\n");
+                        Ftotal += row.food;
+                        Ptotal += row.parts;
+                        Etotal += row.electric;
+                        Gtotal += row.gas;
+                        Ctotal += row.cash;
+                        Stotal += row.shadow;
                     }
-                    if (Ptotal < days)
+                    food = color[0].food;
+                    parts = color[0].parts;
+                    electric = color[0].electric;
+                    gas = color[0].gas;
+                    cash = color[0].cash;
+                    shadow = color[0].shadow;
+                    string message1 = ($"{person_info[0].name} has in Guild:\n<@&{food}>: {Math.Round(Ftotal, 2)}M\n<@&{parts}>: {Math.Round(Ptotal, 2)}M\n<@&{electric}>: {Math.Round(Etotal, 2)}M\n<@&{gas}>: {Math.Round(Gtotal, 2)}M\n<@&{cash}>: {Math.Round(Ctotal, 2)}M\n<@&{shadow}>: {Stotal}");
+                    DateTime Enddate = DateTime.Now;
+                    DateTime Startdate = Convert.ToDateTime(person_info[0].startdate);
+                    int days = ((int)(Enddate - Startdate).TotalDays / 7);
+                    if (Ftotal < days || Ptotal < days || Etotal < days || Gtotal < days || Ctotal < days)
                     {
-                        message2 += ($"<@&{parts}>: {Math.Round(days - Ptotal,2)}M\n");
+                        string message2 = ($"\n{person_info[0].name} owes the Guild:\n");
+                        if (Ftotal < days)
+                        {
+                            message2 += ($"<@&{food}>: {Math.Round(days - Ftotal, 2)}M\n");
+                        }
+                        if (Ptotal < days)
+                        {
+                            message2 += ($"<@&{parts}>: {Math.Round(days - Ptotal, 2)}M\n");
+                        }
+                        if (Etotal < days)
+                        {
+                            message2 += ($"<@&{electric}>: {Math.Round(days - Etotal, 2)}M\n");
+                        }
+                        if (Gtotal < days)
+                        {
+                            message2 += ($"<@&{gas}>: {Math.Round(days - Gtotal, 2)}M\n");
+                        }
+                        if (Ctotal < days)
+                        {
+                            message2 += ($"<@&{cash}>: {Math.Round(days - Ctotal, 2)}M\n");
+                        }
+                        await ReplyAsync(message1 + message2);
                     }
-                    if (Etotal < days)
+                    else
                     {
-                        message2 += ($"<@&{electric}>: {Math.Round(days - Etotal,2)}M\n");
+                        await ReplyAsync(message1 + "\nThank you, you have fullfilled the required amount :hugging:");
                     }
-                    if (Gtotal < days)
-                    {
-                        message2 += ($"<@&{gas}>: {Math.Round(days - Gtotal,2)}M\n");
-                    }
-                    if (Ctotal < days)
-                    {
-                        message2 += ($"<@&{cash}>: {Math.Round(days - Ctotal,2)}M\n");
-                    }
-                    await ReplyAsync(message1+message2);
                 }
                 else
                 {
-                    await ReplyAsync(message1+"\nThank you, you have fullfilled the required amount :hugging:");
+                    await ReplyAsync($"You dont exist please perform `!add`");
                 }
+                
             }
         }
         [Command("add")]
@@ -148,8 +181,15 @@ namespace Modules
             if (Context.Guild.Id == (ulong)guilds.DoD)
             {
                 List<Person_info> person_info = new List<Person_info>();
-                person_info = dbmethod.SelectPersonID("DoD", userid);
-                if (!(person_info[0].id > 0))
+                try
+                {
+                    person_info = dbmethod.SelectPersonID("DoD", userid);
+                }
+                catch (Exception e)
+                {
+
+                }
+                if (!(person_info.Count > 0))
                 {
                     dbmethod.InsertPerson("DoD", userid, name);
                     await ReplyAsync($"{name} added.");
