@@ -37,24 +37,7 @@ namespace DoD
                 HttpClientInitializer = credential,
                 ApplicationName = ApplicationName,
             });
-            DateTime rightnow = DateTime.Now;
-            DateTime unset = DateTime.Parse("1/1/0001 12:00:00 AM");
-            if(!(then==unset))
-            {
-                if (then.CompareTo(rightnow) > 0)
-                {
-                    updateDB();
-                }
-                else
-                {
-                    Console.WriteLine("Not Update DB");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Update DB");
-                updateDB();
-            }
+            updateDB();
         }
         void updateDB()
         {
