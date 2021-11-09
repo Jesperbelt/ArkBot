@@ -200,6 +200,7 @@ namespace Modules
                 }
             }
         }
+        //incomplete
         [Command("rename")]
         public async Task Rename([Remainder]string remain = null)
         {
@@ -210,6 +211,50 @@ namespace Modules
                 name = remain;
             }
             Console.WriteLine($"{name}"); 
+        }
+        [Command("gear")]
+        public async Task gear([Remainder] string remain = null)
+        {
+            if (remain == ""||remain ==null)
+            {
+                await ReplyAsync("You didn't provide the required parameters\nUse command like this:\n``!gear 99 10`` < this will show the base stat\n``!gear 99 10 30`` < this will show upgraded stats");
+            }
+            else
+            {
+                string[] gear = remain.Split();
+                if (gear.Length == 1)
+                {
+                    await ReplyAsync("You didn't provide the required parameters\nUse command like this:\n``!gear 99 10`` < this will show the base stat\n``!gear 99 10 30`` < this will show upgraded stats");
+                }
+                else
+                {
+                    try
+                    {
+                        if (gear.Length == 2 && Double.Parse(gear[0]) >= 0 && Double.Parse(gear[1]) >= 0)
+                        {
+                            double basestat = Double.Parse(gear[0]) / (1 + (Double.Parse(gear[1]) / 10));
+                            await ReplyAsync($"The basestat is: {basestat}");
+                            Console.WriteLine($"{basestat}");
+                        }
+                        else if (gear.Length == 3 && Double.Parse(gear[0]) >= 0 && Double.Parse(gear[1]) >= 0 && Double.Parse(gear[2]) >= 0)
+                        {
+                            double basestat = Double.Parse(gear[0]) / (1 + (Double.Parse(gear[1]) / 10));
+                            double upgradestat = ((basestat / 10) * Double.Parse(gear[2])) + basestat;
+                            await ReplyAsync($"The upgradestat is: {upgradestat}");
+                            Console.WriteLine($"{upgradestat}");
+                        }
+                        else
+                        {
+                            await ReplyAsync("Please don't use negative numbers!");
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        await ReplyAsync("Please only use numbers!");
+                    }
+                }
+            }
         }
     }
 }
