@@ -8,7 +8,7 @@ namespace DoD
 {
     public class DbQuerry
     {
-        public List<Data_bank> SelectRss(string guild,string type,long userid)
+        public List<Data_bank> SelectRss(string guild, string type, long userid)
         {
             List<Data_bank> rss = new List<Data_bank>();
             if (guild == "DoD")
@@ -50,7 +50,7 @@ namespace DoD
             }
             return color;
         }
-        public List<Person_info> SelectPersonID(string guild,long userid)
+        public List<Person_info> SelectPersonID(string guild, long userid)
         {
             List<Person_info> person = new List<Person_info>();
             if (guild == "DoD")
@@ -87,7 +87,7 @@ namespace DoD
             }
             return person;
         }
-        public void InsertPerson(string guild, long userid,string name)
+        public void InsertPerson(string guild, long userid, string name)
         {
             if (guild == "DoD")
             {
@@ -102,6 +102,26 @@ namespace DoD
                 context.person_info.Add(std);
                 context.SaveChanges();
             }
+        }
+        public void UpdatePerson(string guild, long userid,int weeks)
+        {
+            Person_info p = new Person_info();
+            var context = new DoD_Context();
+            List<Person_info> p2 = new List<Person_info>();
+            try
+            {
+                p2 = context.person_info.AsQueryable()
+                .Where(row => row.id == userid).ToList();
+                Console.WriteLine(p2[0].exemption);
+                p2[0].exemption += weeks;
+                Console.WriteLine(p2[0].exemption);
+                context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            Console.WriteLine(p.name);
         }
     }
 }

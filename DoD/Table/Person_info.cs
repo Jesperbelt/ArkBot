@@ -9,5 +9,6 @@ namespace DoD
         public long id { get; set; }
         public string name { get; set; }
         public string startdate { get; set; }
+        public int exemption { get; set; }
     }
 }

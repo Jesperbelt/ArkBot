@@ -40,8 +40,7 @@ namespace Modules
             {
                 userid = (long)user.Id;
             }
-            if (Context.Guild.Id == (ulong)guilds.DoD)
-            {
+
                 SheetQuerry sheetQuerry = new SheetQuerry();
                 sheetQuerry.SelectSheet();
                 List<Data_bank> rss = new List<Data_bank>();
@@ -81,7 +80,6 @@ namespace Modules
                 {
                     await ReplyAsync($"You dont exist please perform `!add`");
                 }
-            }
         }
         [Command("tracker")]
         public async Task Tracker(IGuildUser user = null)
@@ -91,8 +89,6 @@ namespace Modules
             {
                 userid = (long)user.Id;
             }
-            if (Context.Guild.Id == (ulong)guilds.DoD)
-            {
                 SheetQuerry sheetQuerry = new SheetQuerry();
                 sheetQuerry.SelectSheet();
                 List<Data_bank> rss = new List<Data_bank>();
@@ -110,8 +106,6 @@ namespace Modules
                 }
                 if (person_info.Count > 0)
                 {
-
-
                     foreach (var row in rss)
                     {
                         Ftotal += row.food;
@@ -131,6 +125,7 @@ namespace Modules
                     DateTime Enddate = DateTime.Now;
                     DateTime Startdate = Convert.ToDateTime(person_info[0].startdate);
                     int days = ((int)(Enddate - Startdate).TotalDays / 7);
+                    days = days - person_info[0].exemption;
                     if (Ftotal < days || Ptotal < days || Etotal < days || Gtotal < days || Ctotal < days)
                     {
                         string message2 = ($"\n{person_info[0].name} owes the Guild:\n");
@@ -166,7 +161,7 @@ namespace Modules
                     await ReplyAsync($"You dont exist please perform `!add`");
                 }
                 
-            }
+            
         }
         [Command("add")]
         public async Task Add(IGuildUser user = null)
@@ -255,6 +250,53 @@ namespace Modules
                     }
                 }
             }
+        }
+        [RequireUserPermission(ChannelPermission.SendTTSMessages)]
+        [Command("exempt")]
+        public async Task Exempt([Remainder]string s =null)
+        {
+            var users = Context.Message.MentionedUsers;
+            int count = 0;
+            string usernames="";
+            int weeks=0;
+            string[] sa = s.Split();
+            foreach(string o in sa)
+            {
+                if(Int32.TryParse(o, out int i))
+                {
+                    weeks=Int32.Parse(o);
+                }
+            }
+            if (users.Count>0)
+            {
+                
+                foreach (var user in users)
+                {
+                    Console.WriteLine($"{user.Id}");
+                    try
+                    {
+                        dbmethod.UpdatePerson("DoD", (long)user.Id, weeks);
+                        usernames = usernames + $"{user.Username},";
+                    }
+                    catch (Exception e)
+                    {
+                        count++;
+                    }
+                }
+                if (count > 0)
+                {
+                    await ReplyAsync($"Failed to exempt: {count}");
+                }
+                else
+                {
+                    await ReplyAsync($"Succesfully exempted for {weeks} Users: {usernames}");
+                }
+            }
+            else
+            {
+                await ReplyAsync($"Please mention the user you want to exempt.");
+            }
+
         }
     }
 }
