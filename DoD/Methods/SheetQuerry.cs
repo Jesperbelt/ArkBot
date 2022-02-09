@@ -11,7 +11,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using DoD;
-
+using Google.Apis.Sheets.v4.Data;
 
 namespace DoD
 {
@@ -38,6 +38,19 @@ namespace DoD
                 ApplicationName = ApplicationName,
             });
             updateDB();
+        }
+
+        public void UpdateSheet()
+        {
+            var range = $"test!A1";
+            var valueRange = new ValueRange();
+
+            var objectlist = new List<object>() { "Updated" };
+            valueRange.Values = new List<IList<object>> { objectlist };
+
+            var updateRequest = service.Spreadsheets.Values.Update(valueRange, SpreadsheetId, range);
+            updateRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.USERENTERED;
+            var updateResponse = updateRequest.Execute();
         }
         void updateDB()
         {

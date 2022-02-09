@@ -11,6 +11,8 @@ namespace DoD
         public DbSet<Person_info> person_info { get; set; }
         public DbSet<Data_bank> data_bank { get; set; }
         public DbSet<Color> color { get; set; }
+        public DbSet<Guild> guild { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string mysql = System.IO.File.ReadAllText(@"C:\db.txt");

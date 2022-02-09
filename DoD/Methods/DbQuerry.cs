@@ -8,15 +8,22 @@ namespace DoD
 {
     public class DbQuerry
     {
-        public List<Data_bank> SelectRss(string guild, string type, long userid)
+        public List<Data_bank> SelectAllRss(string type, long userid)
         {
             List<Data_bank> rss = new List<Data_bank>();
-            if (guild == "DoD")
-            {
                 var context = new DoD_Context();
                 rss = context.data_bank.AsQueryable()
                 .Where(d => d.type.Equals(type) && d.id == userid).ToList();
-            }
+            Console.WriteLine("inside selectrss");
+            return rss;
+        }
+        public List<Data_bank> SelectTrackerRss(string guild, string type, long userid)
+        {
+            List<Data_bank> rss = new List<Data_bank>();
+            var context = new DoD_Context();
+            rss = context.data_bank.AsQueryable()
+            .Where(d => d.type.Equals(type) && d.id == userid && d.guild == guild).ToList();
+            Console.WriteLine("inside selectrss");
             return rss;
         }
         public int SelectLineId(string guild)
@@ -38,16 +45,13 @@ namespace DoD
             }
             return maxnumb;
         }
-        public List<Color> SelectColor(string guild)
+        public List<Color> SelectColor(long id)
         {
             List<Color> color = new List<Color>();
-            if (guild == "DoD")
-            {
                 var context = new DoD_Context();
                 color = context.color.AsQueryable()
-                .Where(row => row.food > 0)
+                .Where(row => row.guild == id)
                 .ToList();
-            }
             return color;
         }
         public List<Person_info> SelectPersonID(string guild, long userid)
@@ -62,6 +66,7 @@ namespace DoD
             }
             return person;
         }
+
         public List<Person_info> SelectPersonName(string guild, string uname)
         {
             List<Person_info> person = new List<Person_info>();
@@ -87,31 +92,36 @@ namespace DoD
             }
             return person;
         }
-        public void InsertPerson(string guild, long userid, string name)
+        public void InsertPerson(long guild, long userid, string name)
         {
-            if (guild == "DoD")
+
+            var context = new DoD_Context();
+            DateTime date = DateTime.Now;
+            var std = new Person_info()
             {
-                var context = new DoD_Context();
-                DateTime date = DateTime.Now;
-                var std = new Person_info()
-                {
-                    id = userid,
-                    name = name,
-                    startdate = DateTime.Now.ToString(),
-                };
-                context.person_info.Add(std);
-                context.SaveChanges();
-            }
+                id = userid,
+                name = name,
+            };
+            context.person_info.Add(std);
+            var std1 = new Guild()
+            {
+                guild = guild,
+                discordid = userid,
+                startdate = DateTime.Now.ToString(),
+                exemption = 0,
+            };
+            context.guild.Add(std1);
+            context.SaveChanges();
         }
-        public void UpdatePerson(string guild, long userid,int weeks)
+        public void UpdateExemption(long guild, long userid,int weeks)
         {
             Person_info p = new Person_info();
             var context = new DoD_Context();
-            List<Person_info> p2 = new List<Person_info>();
+            List<Guild> p2 = new List<Guild>();
             try
             {
-                p2 = context.person_info.AsQueryable()
-                .Where(row => row.id == userid).ToList();
+                p2 = context.guild.AsQueryable()
+                .Where(row => row.discordid == userid && row.guild == guild).ToList();
                 Console.WriteLine(p2[0].exemption);
                 p2[0].exemption += weeks;
                 Console.WriteLine(p2[0].exemption);
@@ -123,5 +133,15 @@ namespace DoD
             }
             Console.WriteLine(p.name);
         }
+        public List<Guild> SelectStartdate(long guild,long userid)
+        {
+            List<Guild> guildlist = new List<Guild>();
+                var context = new DoD_Context();
+                guildlist = context.guild.AsQueryable()
+                .Where(row => row.discordid == userid && row.guild == guild)
+                .ToList();
+            return guildlist;
+        }
+
     }
 }

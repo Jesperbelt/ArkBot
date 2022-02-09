@@ -17,7 +17,8 @@ namespace Modules
             DoD = 684822117618811140,
             SHR = 696820705651720342,
             SAO = 772805666280308757,
-            test = 643371773290610688
+            test = 643371773290610688,
+            n420 = 741474736068100186
         };
         long food;
         long parts;
@@ -36,6 +37,7 @@ namespace Modules
         public async Task Total(IGuildUser user = null)
         {
             long userid = (long)Context.User.Id;
+            long guildid = (long)Context.Guild.Id;
             if (!(user==null))
             {
                 userid = (long)user.Id;
@@ -47,11 +49,12 @@ namespace Modules
                 List<Person_info> person_info = new List<Person_info>();
                 List<DoD.Color> color = new List<DoD.Color>();
                 DbQuerry t = new DbQuerry();
-                try
+            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            try
                 {
-                    rss = t.SelectRss("DoD", "personal", userid);
+                    rss = t.SelectAllRss("personal", userid);
                     person_info = dbmethod.SelectPersonID("DoD", userid);
-                    color = t.SelectColor("DoD");
+                    color = t.SelectColor(guildid);
                 }
                 catch (Exception e)
                 {
@@ -85,6 +88,9 @@ namespace Modules
         public async Task Tracker(IGuildUser user = null)
         {
             long userid = (long)Context.User.Id;
+            long guildid = (long)Context.Guild.Id;
+            string sguild = (string)Enum.GetName(typeof(guilds),(ulong)guildid);
+            Console.WriteLine(sguild);
             if (!(user == null))
             {
                 userid = (long)user.Id;
@@ -94,11 +100,17 @@ namespace Modules
                 List<Data_bank> rss = new List<Data_bank>();
                 List<DoD.Color> color = new List<DoD.Color>();
                 List<Person_info> person_info = new List<Person_info>();
-                try
+                List<Guild> guild = new List<Guild>();
+            try
                 {
-                    rss = dbmethod.SelectRss("DoD", "guild", userid);
-                    color = dbmethod.SelectColor("DoD");
+                    rss = dbmethod.SelectTrackerRss(sguild, "guild", userid);
+                    color = dbmethod.SelectColor(guildid);
                     person_info = dbmethod.SelectPersonID("DoD", userid);
+                    guild = dbmethod.SelectStartdate(guildid, userid);
+                foreach(var row in guild)
+                    {
+                    Console.WriteLine($"{guild[0].startdate}");
+                    }
                 }
                 catch (Exception e)
                 {
@@ -123,9 +135,11 @@ namespace Modules
                     shadow = color[0].shadow;
                     string message1 = ($"{person_info[0].name} has in Guild:\n<@&{food}>: {Math.Round(Ftotal, 2)}M\n<@&{parts}>: {Math.Round(Ptotal, 2)}M\n<@&{electric}>: {Math.Round(Etotal, 2)}M\n<@&{gas}>: {Math.Round(Gtotal, 2)}M\n<@&{cash}>: {Math.Round(Ctotal, 2)}M\n<@&{shadow}>: {Stotal}");
                     DateTime Enddate = DateTime.Now;
-                    DateTime Startdate = Convert.ToDateTime(person_info[0].startdate);
+                    DateTime Startdate = Convert.ToDateTime(guild[0].startdate);
                     int days = ((int)(Enddate - Startdate).TotalDays / 7);
-                    days = days - person_info[0].exemption;
+                    days = days - guild[0].exemption;
+                if(!(guild[0].startdate == null))
+                {
                     if (Ftotal < days || Ptotal < days || Etotal < days || Gtotal < days || Ctotal < days)
                     {
                         string message2 = ($"\n{person_info[0].name} owes the Guild:\n");
@@ -158,6 +172,11 @@ namespace Modules
                 }
                 else
                 {
+                    await ReplyAsync(message1 + "\nNo ``startdate`` set:exclamation:");
+                }
+                }
+                else
+                {
                     await ReplyAsync($"You dont exist please perform `!add`");
                 }
                 
@@ -167,14 +186,17 @@ namespace Modules
         public async Task Add(IGuildUser user = null)
         {
             long userid = (long)Context.User.Id;
+            long guildid = (long)Context.Guild.Id;
             string name = (string)Context.User.Username;
             if (!(user == null))
             {
                 userid = (long)user.Id;
                 name = (string)user.Username;
             }
-            if (Context.Guild.Id == (ulong)guilds.DoD)
+            Console.WriteLine("add");
+            if (Context.Guild.Id == (ulong)guilds.DoD || Context.Guild.Id == (ulong)guilds.n420)
             {
+                Console.WriteLine("inside");
                 List<Person_info> person_info = new List<Person_info>();
                 try
                 {
@@ -186,7 +208,7 @@ namespace Modules
                 }
                 if (!(person_info.Count > 0))
                 {
-                    dbmethod.InsertPerson("DoD", userid, name);
+                    dbmethod.InsertPerson(guildid, userid, name);
                     await ReplyAsync($"{name} added.");
                 }
                 else
@@ -255,48 +277,55 @@ namespace Modules
         [Command("exempt")]
         public async Task Exempt([Remainder]string s =null)
         {
-            var users = Context.Message.MentionedUsers;
-            int count = 0;
-            string usernames="";
-            int weeks=0;
-            string[] sa = s.Split();
-            foreach(string o in sa)
+            if(true)
             {
-                if(Int32.TryParse(o, out int i))
-                {
-                    weeks=Int32.Parse(o);
-                }
-            }
-            if (users.Count>0)
-            {
-                
-                foreach (var user in users)
-                {
-                    Console.WriteLine($"{user.Id}");
-                    try
-                    {
-                        dbmethod.UpdatePerson("DoD", (long)user.Id, weeks);
-                        usernames = usernames + $"{user.Username},";
-                    }
-                    catch (Exception e)
-                    {
-                        count++;
-                    }
-                }
-                if (count > 0)
-                {
-                    await ReplyAsync($"Failed to exempt: {count}");
-                }
-                else
-                {
-                    await ReplyAsync($"Succesfully exempted for {weeks} Users: {usernames}");
-                }
+                await ReplyAsync($"Failed to exempt");
             }
             else
             {
-                await ReplyAsync($"Please mention the user you want to exempt.");
-            }
+                var users = Context.Message.MentionedUsers;
+                long guildid = (long)Context.Guild.Id;
+                int count = 0;
+                string usernames = "";
+                int weeks = 0;
+                string[] sa = s.Split();
+                foreach (string o in sa)
+                {
+                    if (Int32.TryParse(o, out int i))
+                    {
+                        weeks = Int32.Parse(o);
+                    }
+                }
+                if (users.Count > 0)
+                {
 
+                    foreach (var user in users)
+                    {
+                        Console.WriteLine($"{user.Id}");
+                        try
+                        {
+                            dbmethod.UpdateExemption(guildid, (long)user.Id, weeks);
+                            usernames = usernames + $"{user.Username},";
+                        }
+                        catch (Exception e)
+                        {
+                            count++;
+                        }
+                    }
+                    if (count > 0)
+                    {
+                        await ReplyAsync($"Failed to exempt: {count}");
+                    }
+                    else
+                    {
+                        await ReplyAsync($"Succesfully exempted for {weeks} Users: {usernames}");
+                    }
+                }
+                else
+                {
+                    await ReplyAsync($"Please mention the user you want to exempt.");
+                }
+            }
         }
     }
 }

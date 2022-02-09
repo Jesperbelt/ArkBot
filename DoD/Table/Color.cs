@@ -8,6 +8,7 @@ namespace DoD
     public class Color
     {
         [Key]
+        public long guild { get; set; }
         public long food { get; set; }
         public long parts { get; set; }
         public long electric { get; set; }
