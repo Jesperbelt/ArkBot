@@ -7,7 +7,6 @@ namespace DoD
 {
     public class Data_bank
     {
-        
         public long? id { get; set; }
         [Key]
         public int lineid { get; set; }

@@ -17,15 +17,22 @@ namespace DoD
 {
     public class SheetQuerry
     {
+        public Dictionary<string, string> sheetid = new Dictionary<string, string>()
+        {
+            {"DoD", "1XxR4kmRh2vy4Sg_d4HvrcZQwtAkCCEPUTTAoOXBIlyE"},
+            {"n420", "1EyqPNd0z8sAogR6NxlsyuTGpdTyBwRV3Ti1DJecd1kI"},
+            {"VAL", "1dpBYsLLBTaOY5XPTQIdUwvauTwB8h0rNGRIWkXdc_HU"}
+        };
+        public static string SpreadsheetId { get; set; }
         static readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };
         static readonly string ApplicationName ="DoDSHeetbot";
-        static readonly string SpreadsheetId = "1XxR4kmRh2vy4Sg_d4HvrcZQwtAkCCEPUTTAoOXBIlyE";
         static readonly string sheet = "BankData";
         static SheetsService service;
         DbQuerry dbmethod = new DbQuerry();
         static DateTime then;
-        public void SelectSheet()
+        public void SelectSheet(string guild)
         {
+            SpreadsheetId = sheetid[$"{guild}"];
             GoogleCredential credential;
             using(var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
             {
@@ -37,7 +44,7 @@ namespace DoD
                 HttpClientInitializer = credential,
                 ApplicationName = ApplicationName,
             });
-            updateDB();
+            updateDB(guild);
         }
 
         public void UpdateSheet()
@@ -52,9 +59,9 @@ namespace DoD
             updateRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.USERENTERED;
             var updateResponse = updateRequest.Execute();
         }
-        void updateDB()
+        void updateDB(string guild)
         {
-            int max = dbmethod.SelectLineId("DoD");
+            int max = dbmethod.SelectLineId(guild);
             if (max > 2) { max = max + 2; };
             var range = $"{sheet}!A{max}:K5757";
             var request = service.Spreadsheets.Values.Get(SpreadsheetId, range);
@@ -66,30 +73,53 @@ namespace DoD
                 {
                     Console.WriteLine($"{row[0]} | {row[1]} | {row[2]} | {row[3]} | {row[4]} | {row[5]} | {row[6]} | {row[7]} | {row[8]} | {row[9]} | {row[10]}");
                     List<Person_info> temp = new List<Person_info>();
-                    temp = dbmethod.SelectPersonName("DoD", (string)row[1]);
+                    temp = dbmethod.SelectPersonName(guild, (string)row[1]);
                     long? id = null;
                     if (temp.Count>0)
                     {
                         id = temp[0].id;
                     }
-                    var context = new DoD_Context();
-                    var std = new Data_bank()
+                    var context = new DbContext();
+                    DbContext.dbname = guild;
+                    if (guild == "DoD" || guild == "n420")
                     {
-                        id = id,
-                        lineid = Int32.Parse((string)row[0]),
-                        name = (string)row[1],
-                        date = (string)row[2],
-                        guild = (string)row[3],
-                        type = (string)row[4],
-                        food = Double.Parse((string)row[5]),
-                        parts = Double.Parse((string)row[6]),
-                        electric = Double.Parse((string)row[7]),
-                        gas = Double.Parse((string)row[8]),
-                        cash = Double.Parse((string)row[9]),
-                        shadow = Double.Parse((string)row[10]),
-                    };
-                    context.data_bank.Add(std);
-                    context.SaveChanges();
+                        var std = new Data_bank()
+                        {
+                            id = id,
+                            lineid = Int32.Parse((string)row[0]),
+                            name = (string)row[1],
+                            date = (string)row[2],
+                            guild = (string)row[3],
+                            type = (string)row[4],
+                            food = Double.Parse((string)row[5]),
+                            parts = Double.Parse((string)row[6]),
+                            electric = Double.Parse((string)row[7]),
+                            gas = Double.Parse((string)row[8]),
+                            cash = Double.Parse((string)row[9]),
+                            shadow = Double.Parse((string)row[10]),
+                        };
+                        context.data_bank.Add(std);
+                        context.SaveChanges();
+                    } else if (guild == "VAL")
+                    {
+                        var std = new Data_bank()
+                        {
+                            id = id,
+                            lineid = Int32.Parse((string)row[0]),
+                            name = (string)row[1],
+                            date = (string)row[3],
+                            guild = "",
+                            type = (string)row[4],
+                            food = Double.Parse((string)row[6]),
+                            parts = Double.Parse((string)row[7]),
+                            electric = Double.Parse((string)row[8]),
+                            gas = Double.Parse((string)row[9]),
+                            cash = Double.Parse((string)row[10]),
+                            shadow = 0,
+                        };
+                        context.data_bank.Add(std);
+                        context.SaveChanges();
+                    }
                 }
                 then = DateTime.Now.AddHours(1);
             }

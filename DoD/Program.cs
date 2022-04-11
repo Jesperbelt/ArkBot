@@ -31,7 +31,10 @@ namespace DoD
 
         public async Task RunBotAsync()
         {
-            _client = new DiscordSocketClient();
+            var discordSocketConfig = new DiscordSocketConfig();
+            discordSocketConfig.GatewayIntents = GatewayIntents.All;
+
+            _client = new DiscordSocketClient(discordSocketConfig);
             _commands = new CommandService();
 
             _services = new ServiceCollection()
@@ -49,6 +52,9 @@ namespace DoD
             await _client.StartAsync();
 
             await Task.Delay(-1);
+
+
+
 
         }
 

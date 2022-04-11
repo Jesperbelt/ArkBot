@@ -17,9 +17,12 @@ namespace Modules
             DoD = 684822117618811140,
             SHR = 696820705651720342,
             SAO = 772805666280308757,
+            VAL = 900773269504942191,
             test = 643371773290610688,
             n420 = 741474736068100186
         };
+
+        
         long food;
         long parts;
         long electric;
@@ -33,28 +36,65 @@ namespace Modules
         double Ctotal = 0;
         double Stotal = 0;
         DbQuerry dbmethod = new DbQuerry();
+
+        [Command("info")]
+        public async Task Info(IGuildUser user = null)
+        {
+            long userid = (long)Context.User.Id;
+            long guildid = (long)Context.Guild.Id;
+            string name = (string)Context.User.Username;
+            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            if (!(user == null))
+            {
+                userid = (long)user.Id;
+                name = (string)user.Username;
+            }
+            if (Context.Guild.Id == (ulong)guilds.DoD || Context.Guild.Id == (ulong)guilds.n420)
+            {
+                Console.WriteLine("inside");
+                List<Person_info> person_info = new List<Person_info>();
+                List<Guild> guild_info = new List<Guild>();
+                try
+                {
+                    person_info = dbmethod.SelectPersonID(userid, sguild);
+                    guild_info = dbmethod.SelectStartdate(guildid,userid,sguild);
+                }
+                catch (Exception e)
+                {
+
+                }
+                if (!(person_info.Count > 0))
+                {
+                    await ReplyAsync($"{name} does not exist, please perform ``!add``.");
+                }
+                else
+                {
+                    await ReplyAsync($"Name: {person_info[0].name}\nStartdate: {guild_info[0].startdate}\nExemption: {guild_info[0].exemption}");
+                }
+            }
+        }
         [Command("total")]
         public async Task Total(IGuildUser user = null)
         {
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
+            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
             if (!(user==null))
             {
                 userid = (long)user.Id;
+                Console.WriteLine(userid);
             }
-
                 SheetQuerry sheetQuerry = new SheetQuerry();
-                sheetQuerry.SelectSheet();
+                sheetQuerry.SelectSheet(sguild);
                 List<Data_bank> rss = new List<Data_bank>();
                 List<Person_info> person_info = new List<Person_info>();
                 List<DoD.Color> color = new List<DoD.Color>();
                 DbQuerry t = new DbQuerry();
-            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
             try
                 {
-                    rss = t.SelectAllRss("personal", userid);
-                    person_info = dbmethod.SelectPersonID("DoD", userid);
-                    color = t.SelectColor(guildid);
+                    rss = t.SelectAllRss("personal", userid, sguild);
+                    person_info = dbmethod.SelectPersonID(userid,sguild);
+                    color = t.SelectColor(guildid, sguild);
                 }
                 catch (Exception e)
                 {
@@ -90,23 +130,23 @@ namespace Modules
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
             string sguild = (string)Enum.GetName(typeof(guilds),(ulong)guildid);
-            Console.WriteLine(sguild);
             if (!(user == null))
             {
                 userid = (long)user.Id;
             }
                 SheetQuerry sheetQuerry = new SheetQuerry();
-                sheetQuerry.SelectSheet();
+                sheetQuerry.SelectSheet(sguild);
                 List<Data_bank> rss = new List<Data_bank>();
                 List<DoD.Color> color = new List<DoD.Color>();
                 List<Person_info> person_info = new List<Person_info>();
                 List<Guild> guild = new List<Guild>();
+
             try
                 {
                     rss = dbmethod.SelectTrackerRss(sguild, "guild", userid);
-                    color = dbmethod.SelectColor(guildid);
-                    person_info = dbmethod.SelectPersonID("DoD", userid);
-                    guild = dbmethod.SelectStartdate(guildid, userid);
+                    color = dbmethod.SelectColor(guildid, sguild);
+                    person_info = dbmethod.SelectPersonID(userid, sguild);
+                    guild = dbmethod.SelectStartdate(guildid, userid, sguild);
                 foreach(var row in guild)
                     {
                     Console.WriteLine($"{guild[0].startdate}");
@@ -125,7 +165,7 @@ namespace Modules
                         Etotal += row.electric;
                         Gtotal += row.gas;
                         Ctotal += row.cash;
-                        Stotal += row.shadow;
+                        Stotal += row.shadow; 
                     }
                     food = color[0].food;
                     parts = color[0].parts;
@@ -167,7 +207,11 @@ namespace Modules
                     }
                     else
                     {
-                        await ReplyAsync(message1 + "\nThank you, you have fullfilled the required amount :hugging:");
+                        List<double> calc = new List<double>();
+                        calc.Add(Ftotal); calc.Add(Ptotal); calc.Add(Etotal); calc.Add(Gtotal); calc.Add(Ctotal);
+                        double min = calc.Min();
+                        min = min - days;
+                        await ReplyAsync(message1 + $"\nThank you, you have fullfilled the required amount :hugging:\n{person_info[0].name}, you got credit for **{Math.Round(min, 0)}** weeks");
                     }
                 }
                 else
@@ -182,25 +226,39 @@ namespace Modules
                 
             
         }
+        [Command("flush")]
+        public async Task Flush(IGuildUser user = null)
+        {
+            long userid = (long)Context.User.Id;
+            long guildid = (long)Context.Guild.Id;
+            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            if (userid==423297536581959700)
+            {
+                dbmethod.DeleteBankData(sguild);
+                await ReplyAsync("Tables correctly emptied");
+            } else{
+                await ReplyAsync("You are not allowed to run this command");
+            }
+        }
+
         [Command("add")]
         public async Task Add(IGuildUser user = null)
         {
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
             string name = (string)Context.User.Username;
+            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
             if (!(user == null))
             {
                 userid = (long)user.Id;
                 name = (string)user.Username;
             }
             Console.WriteLine("add");
-            if (Context.Guild.Id == (ulong)guilds.DoD || Context.Guild.Id == (ulong)guilds.n420)
-            {
                 Console.WriteLine("inside");
                 List<Person_info> person_info = new List<Person_info>();
                 try
                 {
-                    person_info = dbmethod.SelectPersonID("DoD", userid);
+                    person_info = dbmethod.SelectPersonID(userid, sguild);
                 }
                 catch (Exception e)
                 {
@@ -208,14 +266,14 @@ namespace Modules
                 }
                 if (!(person_info.Count > 0))
                 {
-                    dbmethod.InsertPerson(guildid, userid, name);
+                    dbmethod.InsertPerson(guildid, userid, name, sguild);
                     await ReplyAsync($"{name} added.");
                 }
                 else
                 {
                     await ReplyAsync($"{person_info[0].name} Already exists!");
                 }
-            }
+            
         }
         //incomplete
         [Command("rename")]
@@ -223,9 +281,20 @@ namespace Modules
         {
             long userid = (long)Context.User.Id;
             string name = "";
+            long guildid = (long)Context.Guild.Id;
+            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
             if (!(remain == null))
             {
                 name = remain;
+                bool succes = dbmethod.UpdateName(sguild, userid, name);
+                if (succes)
+                {
+                    await ReplyAsync($"Succesfully renamed you to: ``{name}``");
+                }
+                else
+                {
+                    await ReplyAsync($"Something went wrong.");
+                }
             }
             Console.WriteLine($"{name}"); 
         }
@@ -285,6 +354,7 @@ namespace Modules
             {
                 var users = Context.Message.MentionedUsers;
                 long guildid = (long)Context.Guild.Id;
+                string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
                 int count = 0;
                 string usernames = "";
                 int weeks = 0;
@@ -304,7 +374,7 @@ namespace Modules
                         Console.WriteLine($"{user.Id}");
                         try
                         {
-                            dbmethod.UpdateExemption(guildid, (long)user.Id, weeks);
+                            dbmethod.UpdateExemption(guildid, (long)user.Id, weeks, sguild);
                             usernames = usernames + $"{user.Username},";
                         }
                         catch (Exception e)
