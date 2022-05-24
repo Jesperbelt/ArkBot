@@ -36,7 +36,15 @@ namespace Modules
         double Ctotal = 0;
         double Stotal = 0;
         DbQuerry dbmethod = new DbQuerry();
-
+        [Command("help")]
+        public async Task Help()
+        {
+            long userid = (long)Context.User.Id;
+            string name = "";
+            long guildid = (long)Context.Guild.Id;
+            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            await ReplyAsync($"This bot has the following commands:\n1. ``!add`` or ``!add @user``\n*Required command to add yourself or @user to the bank bot.*\n2. ``!info`` or ``!info @user``\n*Displays name,startdate and exemption from user that issued the command or user @*\n3. ``!total`` or ``!total @user``\n*Displays total banked in personal*\n4. ``!tracker`` or ``!tracker @user``\n*Displays total banked to guild*\n5. ``!rename name``\n*Rename yourself in the bank bot, BEWARE IF NOT ASKED BY BANKER YOU MAY NOT SEE TOTALS*\n6. ``!gear``\n*Calculate gear stats, issue the command to find how it works*");
+        }
         [Command("info")]
         public async Task Info(IGuildUser user = null)
         {
@@ -49,7 +57,7 @@ namespace Modules
                 userid = (long)user.Id;
                 name = (string)user.Username;
             }
-            if (Context.Guild.Id == (ulong)guilds.DoD || Context.Guild.Id == (ulong)guilds.n420)
+            if (Context.Guild.Id == (ulong)guilds.DoD || Context.Guild.Id == (ulong)guilds.n420 || Context.Guild.Id == (ulong)guilds.SAO)
             {
                 Console.WriteLine("inside");
                 List<Person_info> person_info = new List<Person_info>();
@@ -223,22 +231,16 @@ namespace Modules
                 {
                     await ReplyAsync($"You dont exist please perform `!add`");
                 }
-                
-            
         }
+        [RequireUserPermission(GuildPermission.Administrator)]
         [Command("flush")]
         public async Task Flush(IGuildUser user = null)
         {
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
             string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
-            if (userid==423297536581959700)
-            {
-                dbmethod.DeleteBankData(sguild);
-                await ReplyAsync("Tables correctly emptied");
-            } else{
-                await ReplyAsync("You are not allowed to run this command");
-            }
+            dbmethod.DeleteBankData(sguild);
+            await ReplyAsync("Tables correctly emptied");
         }
 
         [Command("add")]
@@ -342,7 +344,7 @@ namespace Modules
                 }
             }
         }
-        [RequireUserPermission(ChannelPermission.SendTTSMessages)]
+        [RequireUserPermission(GuildPermission.Administrator)]
         [Command("exempt")]
         public async Task Exempt([Remainder]string s =null)
         {

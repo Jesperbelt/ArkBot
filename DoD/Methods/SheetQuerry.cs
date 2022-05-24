@@ -21,11 +21,12 @@ namespace DoD
         {
             {"DoD", "1XxR4kmRh2vy4Sg_d4HvrcZQwtAkCCEPUTTAoOXBIlyE"},
             {"n420", "1EyqPNd0z8sAogR6NxlsyuTGpdTyBwRV3Ti1DJecd1kI"},
-            {"VAL", "1dpBYsLLBTaOY5XPTQIdUwvauTwB8h0rNGRIWkXdc_HU"}
+            {"VAL", "1dpBYsLLBTaOY5XPTQIdUwvauTwB8h0rNGRIWkXdc_HU"},
+            {"SAO", "1n8YMi0_sb1hXphbl1wgO9uNvyHnIVLbWPSBDEJk6GAQ"}
         };
         public static string SpreadsheetId { get; set; }
         static readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };
-        static readonly string ApplicationName ="DoDSHeetbot";
+        static readonly string ApplicationName = "DoDSHeetbot";
         static readonly string sheet = "BankData";
         static SheetsService service;
         DbQuerry dbmethod = new DbQuerry();
@@ -34,7 +35,7 @@ namespace DoD
         {
             SpreadsheetId = sheetid[$"{guild}"];
             GoogleCredential credential;
-            using(var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
             {
                 credential = GoogleCredential.FromStream(stream)
                     .CreateScoped(Scopes);
@@ -62,27 +63,27 @@ namespace DoD
         void updateDB(string guild)
         {
             int max = dbmethod.SelectLineId(guild);
-            if (max > 2) { max = max + 2; };
-            var range = $"{sheet}!A{max}:K5757";
-            var request = service.Spreadsheets.Values.Get(SpreadsheetId, range);
-            var response = request.Execute();
-            var values = response.Values;
-            if (values != null && values.Count > 0)
+            max = max + 2;
+            if (guild == "DoD" || guild == "n420" || guild == "SAO")
             {
-                foreach(var row in values)
+                var range = $"{sheet}!A{max}:K5757";
+                var request = service.Spreadsheets.Values.Get(SpreadsheetId, range);
+                var response = request.Execute();
+                var values = response.Values;
+                if (values != null && values.Count > 0)
                 {
-                    Console.WriteLine($"{row[0]} | {row[1]} | {row[2]} | {row[3]} | {row[4]} | {row[5]} | {row[6]} | {row[7]} | {row[8]} | {row[9]} | {row[10]}");
-                    List<Person_info> temp = new List<Person_info>();
-                    temp = dbmethod.SelectPersonName(guild, (string)row[1]);
-                    long? id = null;
-                    if (temp.Count>0)
+                    foreach (var row in values)
                     {
-                        id = temp[0].id;
-                    }
-                    var context = new DbContext();
-                    DbContext.dbname = guild;
-                    if (guild == "DoD" || guild == "n420")
-                    {
+                        Console.WriteLine($"{row[0]} | {row[1]} | {row[2]} | {row[3]} | {row[4]} | {row[5]} | {row[6]} | {row[7]} | {row[8]} | {row[9]} | {row[10]}");
+                        List<Person_info> temp = new List<Person_info>();
+                        temp = dbmethod.SelectPersonName(guild, (string)row[1]);
+                        long? id = null;
+                        if (temp.Count > 0)
+                        {
+                            id = temp[0].id;
+                        }
+                        var context = new DbContext();
+                        DbContext.dbname = guild;
                         var std = new Data_bank()
                         {
                             id = id,
@@ -100,8 +101,34 @@ namespace DoD
                         };
                         context.data_bank.Add(std);
                         context.SaveChanges();
-                    } else if (guild == "VAL")
+                    }
+                    then = DateTime.Now.AddHours(1);
+                }
+                else
+                {
+                    Console.WriteLine("No data found");
+                }
+            }
+            else if (guild == "VAL")
+            {
+                var range = $"{sheet}!A{max}:L5757";
+                var request = service.Spreadsheets.Values.Get(SpreadsheetId, range);
+                var response = request.Execute();
+                var values = response.Values;
+                if (values != null && values.Count > 0)
+                {
+                    foreach (var row in values)
                     {
+                        Console.WriteLine($"{row[0]} | {row[1]} | {row[2]} | {row[3]} | {row[4]} | {row[5]} | {row[6]} | {row[7]} | {row[8]} | {row[9]} | {row[10]}");
+                        List<Person_info> temp = new List<Person_info>();
+                        temp = dbmethod.SelectPersonName(guild, (string)row[1]);
+                        long? id = null;
+                        if (temp.Count > 0)
+                        {
+                            id = temp[0].id;
+                        }
+                        var context = new DbContext();
+                        DbContext.dbname = guild;
                         var std = new Data_bank()
                         {
                             id = id,
@@ -115,17 +142,17 @@ namespace DoD
                             electric = Double.Parse((string)row[8]),
                             gas = Double.Parse((string)row[9]),
                             cash = Double.Parse((string)row[10]),
-                            shadow = 0,
+                            shadow = Double.Parse((string)row[11]),
                         };
                         context.data_bank.Add(std);
                         context.SaveChanges();
                     }
+                    then = DateTime.Now.AddHours(1);
                 }
-                then = DateTime.Now.AddHours(1);
-            }
-            else
-            {
-                Console.WriteLine("No data found");
+                else
+                {
+                    Console.WriteLine("No data found");
+                }
             }
         }
     }

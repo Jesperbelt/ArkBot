@@ -41,7 +41,7 @@ namespace DoD
                 }
                 catch (Exception e)
                 {
-                    maxnumb = 2;
+                    maxnumb = 0;
                 }
             return maxnumb;
         }
