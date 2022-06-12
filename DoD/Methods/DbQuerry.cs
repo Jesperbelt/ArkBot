@@ -18,6 +18,15 @@ namespace DoD
             Console.WriteLine("inside selectrss");
             return rss;
         }
+        public List<Data_bank> SelectAllRssByType(string type, string guild)
+        {
+            List<Data_bank> rss = new List<Data_bank>();
+            var context = new DbContext();
+            DbContext.dbname = guild;
+            rss = context.data_bank.AsQueryable()
+            .Where(d => d.type.Equals(type)).ToList();
+            return rss;
+        }
         public List<Data_bank> SelectTrackerRss(string guild, string type, long userid)
         {
             List<Data_bank> rss = new List<Data_bank>();

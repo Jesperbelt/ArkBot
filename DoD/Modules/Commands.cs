@@ -19,7 +19,8 @@ namespace Modules
             SAO = 772805666280308757,
             VAL = 900773269504942191,
             test = 643371773290610688,
-            n420 = 741474736068100186
+            n420 = 741474736068100186,
+            FTW = 677564139421302834,
         };
 
         
@@ -112,15 +113,20 @@ namespace Modules
                 {
                     foreach (var row in rss)
                     {
+                    Console.WriteLine("Inside resource count");
                         Ftotal += row.food;
-                        Ptotal += row.parts;
+                    Console.WriteLine("after count 1");
+                    Ptotal += row.parts;
                         Etotal += row.electric;
                         Gtotal += row.gas;
                         Ctotal += row.cash;
                         Stotal += row.shadow;
                     }
-                    food = color[0].food;
-                    parts = color[0].parts;
+                Console.WriteLine("before color set");
+                Console.WriteLine(sguild);
+                food = color[0].food;
+                Console.WriteLine("after color set");
+                parts = color[0].parts;
                     electric = color[0].electric;
                     gas = color[0].gas;
                     cash = color[0].cash;
@@ -231,6 +237,54 @@ namespace Modules
                 {
                     await ReplyAsync($"You dont exist please perform `!add`");
                 }
+        }
+        [Command("totals")]
+        public async Task Totals([Remainder] string remain = null)
+        {
+            long userid = (long)Context.User.Id;
+            long guildid = (long)Context.Guild.Id;
+            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+
+            SheetQuerry sheetQuerry = new SheetQuerry();
+            sheetQuerry.SelectSheet(sguild);
+            List<Data_bank> rss = new List<Data_bank>();
+            List<Person_info> person_info = new List<Person_info>();
+            List<DoD.Color> color = new List<DoD.Color>();
+            DbQuerry t = new DbQuerry();
+            try
+            {
+                if (remain == null)
+                {
+                    await ReplyAsync($"Please provide entry Type. Like `Personal`");
+                }
+                else
+                {
+                    rss = t.SelectAllRssByType(remain, sguild);
+                    person_info = dbmethod.SelectPersonID(userid, sguild);
+                    color = t.SelectColor(guildid, sguild);
+                    foreach (var row in rss)
+                    {
+                        Ftotal += row.food;
+                        Ptotal += row.parts;
+                        Etotal += row.electric;
+                        Gtotal += row.gas;
+                        Ctotal += row.cash;
+                        Stotal += row.shadow;
+                    }
+                    food = color[0].food;
+                    parts = color[0].parts;
+                    electric = color[0].electric;
+                    gas = color[0].gas;
+                    cash = color[0].cash;
+                    shadow = color[0].shadow;
+                    await ReplyAsync($"{sguild} has in {remain}:\n<@&{food}>: {Math.Round(Ftotal, 2)}M\n<@&{parts}>: {Math.Round(Ptotal, 2)}M\n<@&{electric}>: {Math.Round(Etotal, 2)}M\n<@&{gas}>: {Math.Round(Gtotal, 2)}M\n<@&{cash}>: {Math.Round(Ctotal, 2)}M\n<@&{shadow}>: {Stotal}");
+                }
+            }
+            catch (Exception e)
+            {
+                await ReplyAsync($"A error occured");
+            }
+
         }
         [RequireUserPermission(GuildPermission.Administrator)]
         [Command("flush")]
