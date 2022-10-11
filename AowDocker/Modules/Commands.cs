@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -53,12 +54,13 @@ namespace Modules
             long guildid = (long)Context.Guild.Id;
             string name = (string)Context.User.Username;
             string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            Console.WriteLine("Before Info");
             if (!(user == null))
             {
                 userid = (long)user.Id;
                 name = (string)user.Username;
             }
-            if (Context.Guild.Id == (ulong)guilds.DoD || Context.Guild.Id == (ulong)guilds.n420 || Context.Guild.Id == (ulong)guilds.SAO)
+            if (Context.Guild.Id == (ulong)guilds.DoD || Context.Guild.Id == (ulong)guilds.n420 || Context.Guild.Id == (ulong)guilds.SAO || Context.Guild.Id == (ulong)guilds.VAL || Context.Guild.Id == (ulong)guilds.FTW || Context.Guild.Id == (ulong)guilds.SHR)
             {
                 Console.WriteLine("inside");
                 List<Person_info> person_info = new List<Person_info>();
@@ -70,7 +72,7 @@ namespace Modules
                 }
                 catch (Exception e)
                 {
-
+                    Console.WriteLine(e);
                 }
                 if (!(person_info.Count > 0))
                 {
@@ -336,12 +338,24 @@ namespace Modules
         public async Task Rename([Remainder]string remain = null)
         {
             long userid = (long)Context.User.Id;
-            string name = "";
             long guildid = (long)Context.Guild.Id;
             string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
-            if (!(remain == null))
+            string[] input = remain.Split(' ', 2);
+            if (input.Length > 1)
             {
-                name = remain;
+                Console.WriteLine($"Parse rename remain [0] : {userid}\n name: {input[1]}");
+                //userid = Convert.ToInt64(input[0]);
+                String regString = Regex.Match(input[0], @"\d+").Value;
+                Console.WriteLine(regString);
+                try
+                {
+                    userid = Convert.ToInt64(regString);
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                String name = input[1];
                 bool succes = dbmethod.UpdateName(sguild, userid, name);
                 if (succes)
                 {
@@ -352,8 +366,22 @@ namespace Modules
                     await ReplyAsync($"Something went wrong.");
                 }
             }
-            Console.WriteLine($"{name}"); 
+            if (input.Length == 1)
+            {
+                String name = input[0];
+                bool succes = dbmethod.UpdateName(sguild, userid, name);
+                if (succes)
+                {
+                    await ReplyAsync($"Succesfully renamed you to: ``{name}``");
+                }
+                else
+                {
+                    await ReplyAsync($"Something went wrong.");
+                }
+            }
+            Console.WriteLine($"{input[0]} | {input[1]}"); 
         }
+
         [Command("gear")]
         public async Task gear([Remainder] string remain = null)
         {

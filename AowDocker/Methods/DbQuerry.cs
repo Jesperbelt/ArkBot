@@ -12,9 +12,9 @@ namespace DoD
     {
         public List<Data_bank> SelectAllRss(string type, long userid,string guild)
         {
+            DbContext.dbname = guild;
             List<Data_bank> rss = new List<Data_bank>();
                 var context = new DbContext();
-            DbContext.dbname = guild;
                 rss = context.data_bank.AsQueryable()
                 .Where(d => d.type.Equals(type) && d.id == userid).ToList();
             Console.WriteLine("inside selectrss");
@@ -22,18 +22,18 @@ namespace DoD
         }
         public List<Data_bank> SelectAllRssByType(string type, string guild)
         {
+            DbContext.dbname = guild;
             List<Data_bank> rss = new List<Data_bank>();
             var context = new DbContext();
-            DbContext.dbname = guild;
             rss = context.data_bank.AsQueryable()
             .Where(d => d.type.Equals(type)).ToList();
             return rss;
         }
         public List<Data_bank> SelectTrackerRss(string guild, string type, long userid)
         {
+            DbContext.dbname = guild;
             List<Data_bank> rss = new List<Data_bank>();
             var context = new DbContext();
-            DbContext.dbname = guild;
             rss = context.data_bank.AsQueryable()
             .Where(d => d.type.Equals(type) && d.id == userid && d.guild == guild).ToList();
             Console.WriteLine("inside selectrss");
@@ -41,9 +41,9 @@ namespace DoD
         }
         public int SelectLineId(string guild)
         {
+            DbContext.dbname = guild;
             int maxnumb = 0;
             var context = new DbContext();
-            DbContext.dbname = guild;
                 try
                 {
                     maxnumb = context.data_bank.AsQueryable()
@@ -58,9 +58,9 @@ namespace DoD
         }
         public List<Color> SelectColor(long id,string guild)
         {
-            List<Color> color = new List<Color>();
-                var context = new DbContext();
             DbContext.dbname = guild;
+            List<Color> color = new List<Color>();
+            var context = new DbContext();
                 color = context.color.AsQueryable()
                 .Where(row => row.guild == id)
                 .ToList();
@@ -68,9 +68,9 @@ namespace DoD
         }
         public List<Person_info> SelectPersonID(long userid,string guild)
         {
+            DbContext.dbname = guild;
             List<Person_info> person = new List<Person_info>();
             var context = new DbContext();
-            DbContext.dbname = guild;
             person = context.person_info.AsQueryable()
             .Where(row => row.id == userid)
             .ToList();
@@ -79,8 +79,8 @@ namespace DoD
 
         public List<Person_info> SelectPersonName(string guild, string uname)
         {
-            List<Person_info> person = new List<Person_info>();
             DbContext.dbname = guild;
+            List<Person_info> person = new List<Person_info>();
             var context = new DbContext();
                 try
                 {
@@ -102,9 +102,8 @@ namespace DoD
         }
         public void InsertPerson(long guildid, long userid, string name,string guild)
         {
-
-            var context = new DbContext();
             DbContext.dbname = guild;
+            var context = new DbContext();
             DateTime date = DateTime.Now;
             var std = new Person_info()
             {
@@ -124,9 +123,9 @@ namespace DoD
         }
         public void UpdateExemption(long guildid, long userid,int weeks,string guild)
         {
+            DbContext.dbname = guild;
             Person_info p = new Person_info();
             var context = new DbContext();
-            DbContext.dbname = guild;
             List<Guild> p2 = new List<Guild>();
             try
             {
@@ -145,10 +144,10 @@ namespace DoD
         }
         public List<Guild> SelectStartdate(long guildid,long userid,string guild)
         {
+            DbContext.dbname = guild;
             Console.WriteLine("inside SelectStartdate");
             List<Guild> guildlist = new List<Guild>();
                 var context = new DbContext();
-            DbContext.dbname=guild;
                 guildlist = context.guild.AsQueryable()
                 .Where(row => row.discordid == userid && row.guild == guildid)
                 .ToList();
@@ -157,9 +156,9 @@ namespace DoD
 
         public void DeleteBankData(string guild)
         {
+            DbContext.dbname = guild;
             List<Data_bank> rss = new List<Data_bank>();
             var context = new DbContext();
-            DbContext.dbname = guild;
             rss = context.data_bank.AsQueryable()
             .Where(d => d.lineid>0).ToList();
             foreach(var row in rss)
@@ -171,9 +170,9 @@ namespace DoD
 
         public bool UpdateName(string guild,long userid,string name)
         {
+            DbContext.dbname = guild;
             List<Person_info> person = new List<Person_info>();
             var context = new DbContext();
-            DbContext.dbname = guild;
             person = context.person_info.AsQueryable()
             .Where(row => row.id == userid)
             .ToList();

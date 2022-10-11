@@ -14,6 +14,7 @@ using DoD;
 using Google.Apis.Sheets.v4.Data;
 using Table;
 using Context;
+using System.Net;
 
 namespace DoD
 {
@@ -39,7 +40,7 @@ namespace DoD
         {
             SpreadsheetId = sheetid[$"{guild}"];
             GoogleCredential credential;
-            using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream("/source/sheet/credentials.json", FileMode.Open, FileAccess.Read))
             {
                 credential = GoogleCredential.FromStream(stream)
                     .CreateScoped(Scopes);
