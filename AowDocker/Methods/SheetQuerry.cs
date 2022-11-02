@@ -141,14 +141,14 @@ namespace DoD
                             lineid = Int32.Parse((string)row[0]),
                             name = (string)row[1],
                             date = (string)row[2],
-                            guild = (string)row[3],
-                            type = (string)row[4],
-                            food = Double.Parse((string)row[5]),
-                            parts = Double.Parse((string)row[6]),
-                            electric = Double.Parse((string)row[7]),
-                            gas = Double.Parse((string)row[8]),
-                            cash = Double.Parse((string)row[9]),
-                            shadow = Double.Parse((string)row[10]),
+                            guild = "",
+                            type = (string)row[3],
+                            food = Double.Parse((string)row[4]),
+                            parts = Double.Parse((string)row[5]),
+                            electric = Double.Parse((string)row[6]),
+                            gas = Double.Parse((string)row[7]),
+                            cash = Double.Parse((string)row[8]),
+                            shadow = Double.Parse((string)row[9]),
                         };
                         context.data_bank.Add(std);
                         context.SaveChanges();
