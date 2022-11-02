@@ -125,7 +125,7 @@ namespace DoD
                 {
                     foreach (var row in values)
                     {
-                        Console.WriteLine($"{row[0]} | {row[1]} | {row[2]} | {row[3]} | {row[4]} | {row[5]} | {row[6]} | {row[7]} | {row[8]} | {row[9]} | {row[10]}");
+                        Console.WriteLine($"{row[0]} | {row[1]} | {row[2]} | {row[3]} | {row[4]} | {row[5]} | {row[6]} | {row[7]} | {row[8]} | {row[9]}");
                         List<Person_info> temp = new List<Person_info>();
                         temp = dbmethod.SelectPersonName(guild, (string)row[1]);
                         long? id = null;
@@ -140,15 +140,15 @@ namespace DoD
                             id = id,
                             lineid = Int32.Parse((string)row[0]),
                             name = (string)row[1],
-                            date = (string)row[3],
-                            guild = "",
+                            date = (string)row[2],
+                            guild = (string)row[3],
                             type = (string)row[4],
-                            food = Double.Parse((string)row[6]),
-                            parts = Double.Parse((string)row[7]),
-                            electric = Double.Parse((string)row[8]),
-                            gas = Double.Parse((string)row[9]),
-                            cash = Double.Parse((string)row[10]),
-                            shadow = Double.Parse((string)row[11]),
+                            food = Double.Parse((string)row[5]),
+                            parts = Double.Parse((string)row[6]),
+                            electric = Double.Parse((string)row[7]),
+                            gas = Double.Parse((string)row[8]),
+                            cash = Double.Parse((string)row[9]),
+                            shadow = Double.Parse((string)row[10]),
                         };
                         context.data_bank.Add(std);
                         context.SaveChanges();
