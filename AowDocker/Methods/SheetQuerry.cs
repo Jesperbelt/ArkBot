@@ -117,7 +117,7 @@ namespace DoD
             }
             else if (guild == "VAL")
             {
-                var range = $"{sheet}!A{max}:L5757";
+                var range = $"{sheet}!A{max}:J5757";
                 var request = service.Spreadsheets.Values.Get(SpreadsheetId, range);
                 var response = request.Execute();
                 var values = response.Values;
