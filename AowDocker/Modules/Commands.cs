@@ -403,14 +403,14 @@ namespace Modules
                         if (gear.Length == 2 && Double.Parse(gear[0]) >= 0 && Double.Parse(gear[1]) >= 0)
                         {
                             double basestat = Double.Parse(gear[0]) / (1 + (Double.Parse(gear[1]) / 10));
-                            await ReplyAsync($"The basestat is: {basestat}");
+                            await ReplyAsync($"The basestat is: {Math.Round(basestat,2)}");
                             Console.WriteLine($"{basestat}");
                         }
                         else if (gear.Length == 3 && Double.Parse(gear[0]) >= 0 && Double.Parse(gear[1]) >= 0 && Double.Parse(gear[2]) >= 0)
                         {
                             double basestat = Double.Parse(gear[0]) / (1 + (Double.Parse(gear[1]) / 10));
                             double upgradestat = ((basestat / 10) * Double.Parse(gear[2])) + basestat;
-                            await ReplyAsync($"The upgradestat is: {upgradestat}");
+                            await ReplyAsync($"The upgradestat is: {Math.Round(upgradestat,2)}");
                             Console.WriteLine($"{upgradestat}");
                         }
                         else
