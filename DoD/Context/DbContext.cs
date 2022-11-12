@@ -16,7 +16,7 @@ namespace DoD
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string mysql = System.IO.File.ReadAllText(@"C:\db.txt");
-            mysql = mysql.Replace("Guild",$"{dbname}");
+            mysql = mysql.Replace("Guild", $"{dbname}");
             optionsBuilder.UseMySQL(mysql);
         }
     }
