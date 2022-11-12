@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using DoD;
+using Table;
 
 namespace Modules
 {
@@ -15,12 +17,13 @@ namespace Modules
         public enum guilds : ulong
         {
             DoD = 684822117618811140,
-            SHR = 696820705651720342,
+            SHR = 1024869376085737533,
             SAO = 772805666280308757,
             VAL = 900773269504942191,
             test = 643371773290610688,
             n420 = 741474736068100186,
             FTW = 677564139421302834,
+            DOM = 730186186114465793,
         };
 
         
@@ -41,7 +44,6 @@ namespace Modules
         public async Task Help()
         {
             long userid = (long)Context.User.Id;
-            string name = "";
             long guildid = (long)Context.Guild.Id;
             string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
             await ReplyAsync($"This bot has the following commands:\n1. ``!add`` or ``!add @user``\n*Required command to add yourself or @user to the bank bot.*\n2. ``!info`` or ``!info @user``\n*Displays name,startdate and exemption from user that issued the command or user @*\n3. ``!total`` or ``!total @user``\n*Displays total banked in personal*\n4. ``!tracker`` or ``!tracker @user``\n*Displays total banked to guild*\n5. ``!rename name``\n*Rename yourself in the bank bot, BEWARE IF NOT ASKED BY BANKER YOU MAY NOT SEE TOTALS*\n6. ``!gear``\n*Calculate gear stats, issue the command to find how it works*");
@@ -53,13 +55,12 @@ namespace Modules
             long guildid = (long)Context.Guild.Id;
             string name = (string)Context.User.Username;
             string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            Console.WriteLine("Before Info");
             if (!(user == null))
             {
                 userid = (long)user.Id;
                 name = (string)user.Username;
             }
-            if (Context.Guild.Id == (ulong)guilds.DoD || Context.Guild.Id == (ulong)guilds.n420 || Context.Guild.Id == (ulong)guilds.SAO)
-            {
                 Console.WriteLine("inside");
                 List<Person_info> person_info = new List<Person_info>();
                 List<Guild> guild_info = new List<Guild>();
@@ -70,7 +71,7 @@ namespace Modules
                 }
                 catch (Exception e)
                 {
-
+                    Console.WriteLine(e);
                 }
                 if (!(person_info.Count > 0))
                 {
@@ -80,7 +81,6 @@ namespace Modules
                 {
                     await ReplyAsync($"Name: {person_info[0].name}\nStartdate: {guild_info[0].startdate}\nExemption: {guild_info[0].exemption}");
                 }
-            }
         }
         [Command("total")]
         public async Task Total(IGuildUser user = null)
@@ -97,7 +97,7 @@ namespace Modules
                 sheetQuerry.SelectSheet(sguild);
                 List<Data_bank> rss = new List<Data_bank>();
                 List<Person_info> person_info = new List<Person_info>();
-                List<DoD.Color> color = new List<DoD.Color>();
+                List<Table.Color> color = new List<Table.Color>();
                 DbQuerry t = new DbQuerry();
             try
                 {
@@ -151,7 +151,7 @@ namespace Modules
                 SheetQuerry sheetQuerry = new SheetQuerry();
                 sheetQuerry.SelectSheet(sguild);
                 List<Data_bank> rss = new List<Data_bank>();
-                List<DoD.Color> color = new List<DoD.Color>();
+                List<Table.Color> color = new List<Table.Color>();
                 List<Person_info> person_info = new List<Person_info>();
                 List<Guild> guild = new List<Guild>();
 
@@ -174,6 +174,7 @@ namespace Modules
                 {
                     foreach (var row in rss)
                     {
+                    Console.WriteLine($"row food: {row.food}");
                         Ftotal += row.food;
                         Ptotal += row.parts;
                         Etotal += row.electric;
@@ -249,7 +250,7 @@ namespace Modules
             sheetQuerry.SelectSheet(sguild);
             List<Data_bank> rss = new List<Data_bank>();
             List<Person_info> person_info = new List<Person_info>();
-            List<DoD.Color> color = new List<DoD.Color>();
+            List<Table.Color> color = new List<Table.Color>();
             DbQuerry t = new DbQuerry();
             try
             {
@@ -336,12 +337,24 @@ namespace Modules
         public async Task Rename([Remainder]string remain = null)
         {
             long userid = (long)Context.User.Id;
-            string name = "";
             long guildid = (long)Context.Guild.Id;
             string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
-            if (!(remain == null))
+            string[] input = remain.Split(' ', 2);
+            if (input.Length > 1)
             {
-                name = remain;
+                Console.WriteLine($"Parse rename remain [0] : {userid}\n name: {input[1]}");
+                //userid = Convert.ToInt64(input[0]);
+                String regString = Regex.Match(input[0], @"\d+").Value;
+                Console.WriteLine(regString);
+                try
+                {
+                    userid = Convert.ToInt64(regString);
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                String name = input[1];
                 bool succes = dbmethod.UpdateName(sguild, userid, name);
                 if (succes)
                 {
@@ -352,8 +365,22 @@ namespace Modules
                     await ReplyAsync($"Something went wrong.");
                 }
             }
-            Console.WriteLine($"{name}"); 
+            if (input.Length == 1)
+            {
+                String name = input[0];
+                bool succes = dbmethod.UpdateName(sguild, userid, name);
+                if (succes)
+                {
+                    await ReplyAsync($"Succesfully renamed you to: ``{name}``");
+                }
+                else
+                {
+                    await ReplyAsync($"Something went wrong.");
+                }
+            }
+            Console.WriteLine($"{input[0]} | {input[1]}"); 
         }
+
         [Command("gear")]
         public async Task gear([Remainder] string remain = null)
         {
@@ -375,14 +402,14 @@ namespace Modules
                         if (gear.Length == 2 && Double.Parse(gear[0]) >= 0 && Double.Parse(gear[1]) >= 0)
                         {
                             double basestat = Double.Parse(gear[0]) / (1 + (Double.Parse(gear[1]) / 10));
-                            await ReplyAsync($"The basestat is: {basestat}");
+                            await ReplyAsync($"The basestat is: {Math.Round(basestat,2)}");
                             Console.WriteLine($"{basestat}");
                         }
                         else if (gear.Length == 3 && Double.Parse(gear[0]) >= 0 && Double.Parse(gear[1]) >= 0 && Double.Parse(gear[2]) >= 0)
                         {
                             double basestat = Double.Parse(gear[0]) / (1 + (Double.Parse(gear[1]) / 10));
                             double upgradestat = ((basestat / 10) * Double.Parse(gear[2])) + basestat;
-                            await ReplyAsync($"The upgradestat is: {upgradestat}");
+                            await ReplyAsync($"The upgradestat is: {Math.Round(upgradestat,2)}");
                             Console.WriteLine($"{upgradestat}");
                         }
                         else

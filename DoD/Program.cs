@@ -11,7 +11,7 @@ using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 
-namespace DoD
+namespace AowContainer
 {
     class Program
     {
@@ -41,7 +41,7 @@ namespace DoD
                 .AddSingleton(_client)
                 .AddSingleton(_commands)
                 .BuildServiceProvider();
-            string token = System.IO.File.ReadAllText(@"C:\token.txt");
+            string token = Environment.GetEnvironmentVariable("DISCORD_BOT_TOKEN");
 
             _client.Log += _client_Log;
 
