@@ -61,8 +61,6 @@ namespace Modules
                 userid = (long)user.Id;
                 name = (string)user.Username;
             }
-            if (Context.Guild.Id == (ulong)guilds.DoD || Context.Guild.Id == (ulong)guilds.n420 || Context.Guild.Id == (ulong)guilds.SAO || Context.Guild.Id == (ulong)guilds.VAL || Context.Guild.Id == (ulong)guilds.FTW || Context.Guild.Id == (ulong)guilds.SHR)
-            {
                 Console.WriteLine("inside");
                 List<Person_info> person_info = new List<Person_info>();
                 List<Guild> guild_info = new List<Guild>();
@@ -83,7 +81,6 @@ namespace Modules
                 {
                     await ReplyAsync($"Name: {person_info[0].name}\nStartdate: {guild_info[0].startdate}\nExemption: {guild_info[0].exemption}");
                 }
-            }
         }
         [Command("total")]
         public async Task Total(IGuildUser user = null)
