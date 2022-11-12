@@ -174,6 +174,7 @@ namespace Modules
                 {
                     foreach (var row in rss)
                     {
+                    Console.WriteLine($"row food: {row.food}");
                         Ftotal += row.food;
                         Ptotal += row.parts;
                         Etotal += row.electric;
