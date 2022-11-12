@@ -3,8 +3,9 @@ using MySql.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Table;
 
-namespace DoD
+namespace Context
 {
     public class DbContext : Microsoft.EntityFrameworkCore.DbContext
     {
@@ -15,7 +16,7 @@ namespace DoD
         public static string dbname { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string mysql = System.IO.File.ReadAllText(@"C:\db.txt");
+            string mysql = Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING");
             mysql = mysql.Replace("Guild",$"{dbname}");
             optionsBuilder.UseMySQL(mysql);
         }
