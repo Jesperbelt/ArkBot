@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Table
+namespace DoD
 {
     public class Person_info
     {
