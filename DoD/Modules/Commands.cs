@@ -154,7 +154,23 @@ namespace Modules
                 List<Table.Color> color = new List<Table.Color>();
                 List<Person_info> person_info = new List<Person_info>();
                 List<Guild> guild = new List<Guild>();
-            int[] Multiplier = { 1, 1, 1, 1, 1 };
+            double[] Multiplier = { 1, 1, 1, 1, 1 };
+            if (sguild == "DOM")
+            {
+                Multiplier[0] = 3;
+                Multiplier[1] = 3;
+                Multiplier[2] = 3;
+                Multiplier[3] = 3;
+                Multiplier[4] = 1.5;
+            }
+            if (sguild == "SHR")
+            {
+                Multiplier[0] = 3;
+                Multiplier[1] = 3;
+                Multiplier[2] = 3;
+                Multiplier[3] = 3;
+                Multiplier[4] = 3;
+            }
             try
                 {
                     rss = dbmethod.SelectTrackerRss(sguild, "guild", userid);
@@ -195,28 +211,28 @@ namespace Modules
                     weeks = weeks - guild[0].exemption;
                 if(!(guild[0].startdate == null))
                 {
-                    if (Ftotal < weeks || Ptotal < weeks || Etotal < weeks || Gtotal < weeks || Ctotal < weeks)
+                    if (Ftotal < (weeks*Multiplier[0]) || Ptotal < (weeks * Multiplier[1]) || Etotal < (weeks * Multiplier[2]) || Gtotal < (weeks * Multiplier[3]) || Ctotal < (weeks * Multiplier[4]))
                     {
                         string message2 = ($"\n{person_info[0].name} owes the Guild:\n");
-                        if (Ftotal < weeks)
+                        if (Ftotal < (weeks * Multiplier[0]))
                         {
-                            message2 += ($"<@&{food}>: {Math.Round(weeks - Ftotal, 2)}M\n");
+                            message2 += ($"<@&{food}>: {Math.Round((weeks * Multiplier[0]) - Ftotal, 2)}M\n");
                         }
-                        if (Ptotal < weeks)
+                        if (Ptotal < (weeks * Multiplier[1]))
                         {
-                            message2 += ($"<@&{parts}>: {Math.Round(weeks - Ptotal, 2)}M\n");
+                            message2 += ($"<@&{parts}>: {Math.Round((weeks * Multiplier[1]) - Ptotal, 2)}M\n");
                         }
-                        if (Etotal < weeks)
+                        if (Etotal < (weeks * Multiplier[2]))
                         {
-                            message2 += ($"<@&{electric}>: {Math.Round(weeks - Etotal, 2)}M\n");
+                            message2 += ($"<@&{electric}>: {Math.Round((weeks * Multiplier[2]) - Etotal, 2)}M\n");
                         }
-                        if (Gtotal < weeks)
+                        if (Gtotal < (weeks * Multiplier[3]))
                         {
-                            message2 += ($"<@&{gas}>: {Math.Round(weeks - Gtotal, 2)}M\n");
+                            message2 += ($"<@&{gas}>: {Math.Round((weeks * Multiplier[3]) - Gtotal, 2)}M\n");
                         }
-                        if (Ctotal < weeks)
+                        if (Ctotal < (weeks * Multiplier[4]))
                         {
-                            message2 += ($"<@&{cash}>: {Math.Round(weeks - Ctotal, 2)}M\n");
+                            message2 += ($"<@&{cash}>: {Math.Round((weeks * Multiplier[4]) - Ctotal, 2)}M\n");
                         }
                         await ReplyAsync(message1 + message2);
                     }
@@ -225,7 +241,26 @@ namespace Modules
                         List<double> calc = new List<double>();
                         calc.Add(Ftotal); calc.Add(Ptotal); calc.Add(Etotal); calc.Add(Gtotal); calc.Add(Ctotal);
                         double min = calc.Min();
-                        min = min - weeks;
+                        if (min == Ftotal)
+                        {
+                            min = min - (weeks * Multiplier[0]);
+                        }
+                        else if (min == Ptotal)
+                        {
+                            min = min - (weeks * Multiplier[1]);
+                        }
+                        else if (min == Etotal)
+                        {
+                            min = min - (weeks * Multiplier[2]);
+                        }
+                        else if (min == Gtotal)
+                        {
+                            min = min - (weeks * Multiplier[3]);
+                        }
+                        else if (min == Ctotal)
+                        {
+                            min = min - (weeks * Multiplier[4]);
+                        }
                         await ReplyAsync(message1 + $"\nThank you, you have fullfilled the required amount :hugging:\n{person_info[0].name}, you got credit for **{Math.Round(min, 0)}** weeks");
                     }
                 }
