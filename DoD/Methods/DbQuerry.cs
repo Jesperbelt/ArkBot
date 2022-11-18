@@ -8,13 +8,13 @@ namespace DoD
 {
     public class DbQuerry
     {
-        public List<Data_bank> SelectAllRss(string type, long userid, string guild)
+        public List<Data_bank> SelectAllRss(string type, long userid,string guild)
         {
             List<Data_bank> rss = new List<Data_bank>();
-            var context = new DbContext();
+                var context = new DbContext();
             DbContext.dbname = guild;
-            rss = context.data_bank.AsQueryable()
-            .Where(d => d.type.Equals(type) && d.id == userid).ToList();
+                rss = context.data_bank.AsQueryable()
+                .Where(d => d.type.Equals(type) && d.id == userid).ToList();
             Console.WriteLine("inside selectrss");
             return rss;
         }
@@ -42,29 +42,29 @@ namespace DoD
             int maxnumb = 0;
             var context = new DbContext();
             DbContext.dbname = guild;
-            try
-            {
-                maxnumb = context.data_bank.AsQueryable()
-            .Max(d => d.lineid);
-                Console.WriteLine(maxnumb);
-            }
-            catch (Exception e)
-            {
-                maxnumb = 0;
-            }
+                try
+                {
+                    maxnumb = context.data_bank.AsQueryable()
+                .Max(d => d.lineid);
+                    Console.WriteLine(maxnumb);
+                }
+                catch (Exception e)
+                {
+                    maxnumb = 0;
+                }
             return maxnumb;
         }
-        public List<Color> SelectColor(long id, string guild)
+        public List<Color> SelectColor(long id,string guild)
         {
             List<Color> color = new List<Color>();
-            var context = new DbContext();
+                var context = new DbContext();
             DbContext.dbname = guild;
-            color = context.color.AsQueryable()
-            .Where(row => row.guild == id)
-            .ToList();
+                color = context.color.AsQueryable()
+                .Where(row => row.guild == id)
+                .ToList();
             return color;
         }
-        public List<Person_info> SelectPersonID(long userid, string guild)
+        public List<Person_info> SelectPersonID(long userid,string guild)
         {
             List<Person_info> person = new List<Person_info>();
             var context = new DbContext();
@@ -80,16 +80,16 @@ namespace DoD
             List<Person_info> person = new List<Person_info>();
             DbContext.dbname = guild;
             var context = new DbContext();
-            try
-            {
-                person = context.person_info.AsQueryable()
-                .Where(row => row.name == uname)
-                .ToList();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+                try
+                {
+                    person = context.person_info.AsQueryable()
+                    .Where(row => row.name == uname)
+                    .ToList();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             if (person == null)
             {
                 List<Person_info> nan = new List<Person_info>();
@@ -98,7 +98,7 @@ namespace DoD
             }
             return person;
         }
-        public void InsertPerson(long guildid, long userid, string name, string guild)
+        public void InsertPerson(long guildid, long userid, string name,string guild)
         {
 
             var context = new DbContext();
@@ -120,7 +120,7 @@ namespace DoD
             context.guild.Add(std1);
             context.SaveChanges();
         }
-        public void UpdateExemption(long guildid, long userid, int weeks, string guild)
+        public void UpdateExemption(long guildid, long userid,int weeks,string guild)
         {
             Person_info p = new Person_info();
             var context = new DbContext();
@@ -141,15 +141,15 @@ namespace DoD
             }
             Console.WriteLine(p.name);
         }
-        public List<Guild> SelectStartdate(long guildid, long userid, string guild)
+        public List<Guild> SelectStartdate(long guildid,long userid,string guild)
         {
             Console.WriteLine("inside SelectStartdate");
             List<Guild> guildlist = new List<Guild>();
-            var context = new DbContext();
-            DbContext.dbname = guild;
-            guildlist = context.guild.AsQueryable()
-            .Where(row => row.discordid == userid && row.guild == guildid)
-            .ToList();
+                var context = new DbContext();
+            DbContext.dbname=guild;
+                guildlist = context.guild.AsQueryable()
+                .Where(row => row.discordid == userid && row.guild == guildid)
+                .ToList();
             return guildlist;
         }
 
@@ -159,15 +159,15 @@ namespace DoD
             var context = new DbContext();
             DbContext.dbname = guild;
             rss = context.data_bank.AsQueryable()
-            .Where(d => d.lineid > 0).ToList();
-            foreach (var row in rss)
+            .Where(d => d.lineid>0).ToList();
+            foreach(var row in rss)
             {
                 context.data_bank.Remove(row);
             }
             context.SaveChanges();
         }
 
-        public bool UpdateName(string guild, long userid, string name)
+        public bool UpdateName(string guild,long userid,string name)
         {
             List<Person_info> person = new List<Person_info>();
             var context = new DbContext();
@@ -181,7 +181,7 @@ namespace DoD
                 context.SaveChanges();
                 return true;
             }
-            catch (Exception e)
+            catch(Exception e)
             {
                 return false;
             }

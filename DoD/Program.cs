@@ -18,13 +18,13 @@ namespace AowContainer
         static void Main(string[] args)
         {
             new Program().RunBotAsync().GetAwaiter().GetResult();
-
+            
             //*Sheet test:
             //SheetQuerry sheetQuerry = new SheetQuerry();
             //sheetQuerry.SelectSheet();
 
         }
-
+        
         private DiscordSocketClient _client;
         private CommandService _commands;
         private IServiceProvider _services;
@@ -60,7 +60,7 @@ namespace AowContainer
 
         private Task _client_Log(LogMessage arg)
         {
-
+            
             Console.WriteLine(arg);
             return Task.CompletedTask;
         }

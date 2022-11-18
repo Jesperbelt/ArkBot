@@ -18,7 +18,7 @@ namespace Table
         public string type { get; set; }
         public double food { get; set; }
         public double parts { get; set; }
-        public double electric { get; set; }
+        public double electric { get; set;}
         public double gas { get; set; }
         public double cash { get; set; }
         public double shadow { get; set; }

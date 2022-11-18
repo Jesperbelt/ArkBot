@@ -23,7 +23,7 @@ namespace Modules
             FTW = 677564139421302834,
         };
 
-
+        
         long food;
         long parts;
         long electric;
@@ -66,7 +66,7 @@ namespace Modules
                 try
                 {
                     person_info = dbmethod.SelectPersonID(userid, sguild);
-                    guild_info = dbmethod.SelectStartdate(guildid, userid, sguild);
+                    guild_info = dbmethod.SelectStartdate(guildid,userid,sguild);
                 }
                 catch (Exception e)
                 {
@@ -88,111 +88,111 @@ namespace Modules
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
             string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
-            if (!(user == null))
+            if (!(user==null))
             {
                 userid = (long)user.Id;
                 Console.WriteLine(userid);
             }
-            SheetQuerry sheetQuerry = new SheetQuerry();
-            sheetQuerry.SelectSheet(sguild);
-            List<Data_bank> rss = new List<Data_bank>();
-            List<Person_info> person_info = new List<Person_info>();
-            List<DoD.Color> color = new List<DoD.Color>();
-            DbQuerry t = new DbQuerry();
+                SheetQuerry sheetQuerry = new SheetQuerry();
+                sheetQuerry.SelectSheet(sguild);
+                List<Data_bank> rss = new List<Data_bank>();
+                List<Person_info> person_info = new List<Person_info>();
+                List<DoD.Color> color = new List<DoD.Color>();
+                DbQuerry t = new DbQuerry();
             try
-            {
-                rss = t.SelectAllRss("personal", userid, sguild);
-                person_info = dbmethod.SelectPersonID(userid, sguild);
-                color = t.SelectColor(guildid, sguild);
-            }
-            catch (Exception e)
-            {
-
-            }
-            if (person_info.Count > 0)
-            {
-                foreach (var row in rss)
                 {
+                    rss = t.SelectAllRss("personal", userid, sguild);
+                    person_info = dbmethod.SelectPersonID(userid,sguild);
+                    color = t.SelectColor(guildid, sguild);
+                }
+                catch (Exception e)
+                {
+
+                }
+                if (person_info.Count > 0)
+                {
+                    foreach (var row in rss)
+                    {
                     Console.WriteLine("Inside resource count");
-                    Ftotal += row.food;
+                        Ftotal += row.food;
                     Console.WriteLine("after count 1");
                     Ptotal += row.parts;
-                    Etotal += row.electric;
-                    Gtotal += row.gas;
-                    Ctotal += row.cash;
-                    Stotal += row.shadow;
-                }
+                        Etotal += row.electric;
+                        Gtotal += row.gas;
+                        Ctotal += row.cash;
+                        Stotal += row.shadow;
+                    }
                 Console.WriteLine("before color set");
                 Console.WriteLine(sguild);
                 food = color[0].food;
                 Console.WriteLine("after color set");
                 parts = color[0].parts;
-                electric = color[0].electric;
-                gas = color[0].gas;
-                cash = color[0].cash;
-                shadow = color[0].shadow;
-                await ReplyAsync($"{person_info[0].name} has in Personal:\n<@&{food}>: {Math.Round(Ftotal, 2)}M\n<@&{parts}>: {Math.Round(Ptotal, 2)}M\n<@&{electric}>: {Math.Round(Etotal, 2)}M\n<@&{gas}>: {Math.Round(Gtotal, 2)}M\n<@&{cash}>: {Math.Round(Ctotal, 2)}M\n<@&{shadow}>: {Stotal}");
-            }
-            else
-            {
-                await ReplyAsync($"You dont exist please perform `!add`");
-            }
+                    electric = color[0].electric;
+                    gas = color[0].gas;
+                    cash = color[0].cash;
+                    shadow = color[0].shadow;
+                    await ReplyAsync($"{person_info[0].name} has in Personal:\n<@&{food}>: {Math.Round(Ftotal, 2)}M\n<@&{parts}>: {Math.Round(Ptotal, 2)}M\n<@&{electric}>: {Math.Round(Etotal, 2)}M\n<@&{gas}>: {Math.Round(Gtotal, 2)}M\n<@&{cash}>: {Math.Round(Ctotal, 2)}M\n<@&{shadow}>: {Stotal}");
+                }
+                else
+                {
+                    await ReplyAsync($"You dont exist please perform `!add`");
+                }
         }
         [Command("tracker")]
         public async Task Tracker(IGuildUser user = null)
         {
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
-            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            string sguild = (string)Enum.GetName(typeof(guilds),(ulong)guildid);
             if (!(user == null))
             {
                 userid = (long)user.Id;
             }
-            SheetQuerry sheetQuerry = new SheetQuerry();
-            sheetQuerry.SelectSheet(sguild);
-            List<Data_bank> rss = new List<Data_bank>();
-            List<DoD.Color> color = new List<DoD.Color>();
-            List<Person_info> person_info = new List<Person_info>();
-            List<Guild> guild = new List<Guild>();
+                SheetQuerry sheetQuerry = new SheetQuerry();
+                sheetQuerry.SelectSheet(sguild);
+                List<Data_bank> rss = new List<Data_bank>();
+                List<DoD.Color> color = new List<DoD.Color>();
+                List<Person_info> person_info = new List<Person_info>();
+                List<Guild> guild = new List<Guild>();
 
             try
-            {
-                rss = dbmethod.SelectTrackerRss(sguild, "guild", userid);
-                color = dbmethod.SelectColor(guildid, sguild);
-                person_info = dbmethod.SelectPersonID(userid, sguild);
-                guild = dbmethod.SelectStartdate(guildid, userid, sguild);
-                foreach (var row in guild)
                 {
+                    rss = dbmethod.SelectTrackerRss(sguild, "guild", userid);
+                    color = dbmethod.SelectColor(guildid, sguild);
+                    person_info = dbmethod.SelectPersonID(userid, sguild);
+                    guild = dbmethod.SelectStartdate(guildid, userid, sguild);
+                foreach(var row in guild)
+                    {
                     Console.WriteLine($"{guild[0].startdate}");
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-
-            }
-            if (person_info.Count > 0)
-            {
-                foreach (var row in rss)
+                catch (Exception e)
                 {
-                    Ftotal += row.food;
-                    Ptotal += row.parts;
-                    Etotal += row.electric;
-                    Gtotal += row.gas;
-                    Ctotal += row.cash;
-                    Stotal += row.shadow;
+
                 }
-                food = color[0].food;
-                parts = color[0].parts;
-                electric = color[0].electric;
-                gas = color[0].gas;
-                cash = color[0].cash;
-                shadow = color[0].shadow;
-                string message1 = ($"{person_info[0].name} has in Guild:\n<@&{food}>: {Math.Round(Ftotal, 2)}M\n<@&{parts}>: {Math.Round(Ptotal, 2)}M\n<@&{electric}>: {Math.Round(Etotal, 2)}M\n<@&{gas}>: {Math.Round(Gtotal, 2)}M\n<@&{cash}>: {Math.Round(Ctotal, 2)}M\n<@&{shadow}>: {Stotal}");
-                DateTime Enddate = DateTime.Now;
-                DateTime Startdate = Convert.ToDateTime(guild[0].startdate);
-                int days = ((int)(Enddate - Startdate).TotalDays / 7);
-                days = days - guild[0].exemption;
-                if (!(guild[0].startdate == null))
+                if (person_info.Count > 0)
+                {
+                    foreach (var row in rss)
+                    {
+                        Ftotal += row.food;
+                        Ptotal += row.parts;
+                        Etotal += row.electric;
+                        Gtotal += row.gas;
+                        Ctotal += row.cash;
+                        Stotal += row.shadow; 
+                    }
+                    food = color[0].food;
+                    parts = color[0].parts;
+                    electric = color[0].electric;
+                    gas = color[0].gas;
+                    cash = color[0].cash;
+                    shadow = color[0].shadow;
+                    string message1 = ($"{person_info[0].name} has in Guild:\n<@&{food}>: {Math.Round(Ftotal, 2)}M\n<@&{parts}>: {Math.Round(Ptotal, 2)}M\n<@&{electric}>: {Math.Round(Etotal, 2)}M\n<@&{gas}>: {Math.Round(Gtotal, 2)}M\n<@&{cash}>: {Math.Round(Ctotal, 2)}M\n<@&{shadow}>: {Stotal}");
+                    DateTime Enddate = DateTime.Now;
+                    DateTime Startdate = Convert.ToDateTime(guild[0].startdate);
+                    int days = ((int)(Enddate - Startdate).TotalDays / 7);
+                    days = days - guild[0].exemption;
+                if(!(guild[0].startdate == null))
                 {
                     if (Ftotal < days || Ptotal < days || Etotal < days || Gtotal < days || Ctotal < days)
                     {
@@ -232,11 +232,11 @@ namespace Modules
                 {
                     await ReplyAsync(message1 + "\nNo ``startdate`` set:exclamation:");
                 }
-            }
-            else
-            {
-                await ReplyAsync($"You dont exist please perform `!add`");
-            }
+                }
+                else
+                {
+                    await ReplyAsync($"You dont exist please perform `!add`");
+                }
         }
         [Command("totals")]
         public async Task Totals([Remainder] string remain = null)
@@ -310,30 +310,30 @@ namespace Modules
                 name = (string)user.Username;
             }
             Console.WriteLine("add");
-            Console.WriteLine("inside");
-            List<Person_info> person_info = new List<Person_info>();
-            try
-            {
-                person_info = dbmethod.SelectPersonID(userid, sguild);
-            }
-            catch (Exception e)
-            {
+                Console.WriteLine("inside");
+                List<Person_info> person_info = new List<Person_info>();
+                try
+                {
+                    person_info = dbmethod.SelectPersonID(userid, sguild);
+                }
+                catch (Exception e)
+                {
 
-            }
-            if (!(person_info.Count > 0))
-            {
-                dbmethod.InsertPerson(guildid, userid, name, sguild);
-                await ReplyAsync($"{name} added.");
-            }
-            else
-            {
-                await ReplyAsync($"{person_info[0].name} Already exists!");
-            }
-
+                }
+                if (!(person_info.Count > 0))
+                {
+                    dbmethod.InsertPerson(guildid, userid, name, sguild);
+                    await ReplyAsync($"{name} added.");
+                }
+                else
+                {
+                    await ReplyAsync($"{person_info[0].name} Already exists!");
+                }
+            
         }
         //incomplete
         [Command("rename")]
-        public async Task Rename([Remainder] string remain = null)
+        public async Task Rename([Remainder]string remain = null)
         {
             long userid = (long)Context.User.Id;
             string name = "";
@@ -352,12 +352,12 @@ namespace Modules
                     await ReplyAsync($"Something went wrong.");
                 }
             }
-            Console.WriteLine($"{name}");
+            Console.WriteLine($"{name}"); 
         }
         [Command("gear")]
         public async Task gear([Remainder] string remain = null)
         {
-            if (remain == "" || remain == null)
+            if (remain == ""||remain ==null)
             {
                 await ReplyAsync("You didn't provide the required parameters\nUse command like this:\n``!gear 99 10`` < this will show the base stat\n``!gear 99 10 30`` < this will show upgraded stats");
             }
@@ -400,9 +400,9 @@ namespace Modules
         }
         [RequireUserPermission(GuildPermission.Administrator)]
         [Command("exempt")]
-        public async Task Exempt([Remainder] string s = null)
+        public async Task Exempt([Remainder]string s =null)
         {
-            if (true)
+            if(true)
             {
                 await ReplyAsync($"Failed to exempt");
             }
