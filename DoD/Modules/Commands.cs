@@ -159,11 +159,11 @@ namespace Modules
             if (sguild == "DOM")
             {
                 Console.WriteLine("Set DOM multiplier");
-                Multiplier[0] = 3;
-                Multiplier[1] = 3;
-                Multiplier[2] = 3;
-                Multiplier[3] = 3;
-                Multiplier[4] = 1.5;
+                Multiplier[0] = 2;
+                Multiplier[1] = 2;
+                Multiplier[2] = 2;
+                Multiplier[3] = 2;
+                Multiplier[4] = 1;
             }
             if (sguild == "SHR")
             {
