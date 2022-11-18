@@ -144,6 +144,7 @@ namespace Modules
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
             string sguild = (string)Enum.GetName(typeof(guilds),(ulong)guildid);
+            Console.WriteLine($"{sguild}");
             if (!(user == null))
             {
                 userid = (long)user.Id;
@@ -157,6 +158,7 @@ namespace Modules
             double[] Multiplier = { 1, 1, 1, 1, 1 };
             if (sguild == "DOM")
             {
+                Console.WriteLine("Set DOM multiplier");
                 Multiplier[0] = 3;
                 Multiplier[1] = 3;
                 Multiplier[2] = 3;
@@ -165,6 +167,7 @@ namespace Modules
             }
             if (sguild == "SHR")
             {
+                Console.WriteLine("Set SHR multiplier");
                 Multiplier[0] = 3;
                 Multiplier[1] = 3;
                 Multiplier[2] = 3;
