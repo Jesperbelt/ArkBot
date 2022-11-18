@@ -154,7 +154,7 @@ namespace Modules
                 List<Table.Color> color = new List<Table.Color>();
                 List<Person_info> person_info = new List<Person_info>();
                 List<Guild> guild = new List<Guild>();
-
+            int[] Multiplier = { 1, 1, 1, 1, 1 };
             try
                 {
                     rss = dbmethod.SelectTrackerRss(sguild, "guild", userid);
@@ -191,32 +191,32 @@ namespace Modules
                     string message1 = ($"{person_info[0].name} has in Guild:\n<@&{food}>: {Math.Round(Ftotal, 2)}M\n<@&{parts}>: {Math.Round(Ptotal, 2)}M\n<@&{electric}>: {Math.Round(Etotal, 2)}M\n<@&{gas}>: {Math.Round(Gtotal, 2)}M\n<@&{cash}>: {Math.Round(Ctotal, 2)}M\n<@&{shadow}>: {Stotal}");
                     DateTime Enddate = DateTime.Now;
                     DateTime Startdate = Convert.ToDateTime(guild[0].startdate);
-                    int days = ((int)(Enddate - Startdate).TotalDays / 7);
-                    days = days - guild[0].exemption;
+                    int weeks = ((int)(Enddate - Startdate).TotalDays / 7);
+                    weeks = weeks - guild[0].exemption;
                 if(!(guild[0].startdate == null))
                 {
-                    if (Ftotal < days || Ptotal < days || Etotal < days || Gtotal < days || Ctotal < days)
+                    if (Ftotal < weeks || Ptotal < weeks || Etotal < weeks || Gtotal < weeks || Ctotal < weeks)
                     {
                         string message2 = ($"\n{person_info[0].name} owes the Guild:\n");
-                        if (Ftotal < days)
+                        if (Ftotal < weeks)
                         {
-                            message2 += ($"<@&{food}>: {Math.Round(days - Ftotal, 2)}M\n");
+                            message2 += ($"<@&{food}>: {Math.Round(weeks - Ftotal, 2)}M\n");
                         }
-                        if (Ptotal < days)
+                        if (Ptotal < weeks)
                         {
-                            message2 += ($"<@&{parts}>: {Math.Round(days - Ptotal, 2)}M\n");
+                            message2 += ($"<@&{parts}>: {Math.Round(weeks - Ptotal, 2)}M\n");
                         }
-                        if (Etotal < days)
+                        if (Etotal < weeks)
                         {
-                            message2 += ($"<@&{electric}>: {Math.Round(days - Etotal, 2)}M\n");
+                            message2 += ($"<@&{electric}>: {Math.Round(weeks - Etotal, 2)}M\n");
                         }
-                        if (Gtotal < days)
+                        if (Gtotal < weeks)
                         {
-                            message2 += ($"<@&{gas}>: {Math.Round(days - Gtotal, 2)}M\n");
+                            message2 += ($"<@&{gas}>: {Math.Round(weeks - Gtotal, 2)}M\n");
                         }
-                        if (Ctotal < days)
+                        if (Ctotal < weeks)
                         {
-                            message2 += ($"<@&{cash}>: {Math.Round(days - Ctotal, 2)}M\n");
+                            message2 += ($"<@&{cash}>: {Math.Round(weeks - Ctotal, 2)}M\n");
                         }
                         await ReplyAsync(message1 + message2);
                     }
@@ -225,7 +225,7 @@ namespace Modules
                         List<double> calc = new List<double>();
                         calc.Add(Ftotal); calc.Add(Ptotal); calc.Add(Etotal); calc.Add(Gtotal); calc.Add(Ctotal);
                         double min = calc.Min();
-                        min = min - days;
+                        min = min - weeks;
                         await ReplyAsync(message1 + $"\nThank you, you have fullfilled the required amount :hugging:\n{person_info[0].name}, you got credit for **{Math.Round(min, 0)}** weeks");
                     }
                 }
