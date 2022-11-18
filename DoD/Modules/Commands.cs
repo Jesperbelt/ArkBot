@@ -244,27 +244,54 @@ namespace Modules
                         List<double> calc = new List<double>();
                         calc.Add(Ftotal); calc.Add(Ptotal); calc.Add(Etotal); calc.Add(Gtotal); calc.Add(Ctotal);
                         double min = calc.Min();
-                        if (min == Ftotal)
+                        double credit = 0;
+                        if (weeks > 0)
                         {
-                            min = min - (weeks * Multiplier[0]);
+                            if (min == Ctotal)
+                            {
+                                credit = min - (weeks * Multiplier[4]);
+                            }
+                            else if (min == Ptotal)
+                            {
+                                credit = min - (weeks * Multiplier[1]);
+                            }
+                            else if (min == Etotal)
+                            {
+                                credit = min - (weeks * Multiplier[2]);
+                            }
+                            else if (min == Gtotal)
+                            {
+                                credit = min - (weeks * Multiplier[3]);
+                            }
+                            else if (min == Ftotal)
+                            {
+                                credit = min - (weeks * Multiplier[4]);
+                            }
                         }
-                        else if (min == Ptotal)
+                        else
                         {
-                            min = min - (weeks * Multiplier[1]);
+                            if (min == Ctotal)
+                            {
+                                credit = min / Multiplier[4];
+                            }
+                            else if (min == Ptotal)
+                            {
+                                credit = min / Multiplier[1];
+                            }
+                            else if (min == Etotal)
+                            {
+                                credit = min / Multiplier[2];
+                            }
+                            else if (min == Gtotal)
+                            {
+                                credit = min / Multiplier[3];
+                            }
+                            else if (min == Ftotal)
+                            {
+                                credit = min / Multiplier[4];
+                            }
                         }
-                        else if (min == Etotal)
-                        {
-                            min = min - (weeks * Multiplier[2]);
-                        }
-                        else if (min == Gtotal)
-                        {
-                            min = min - (weeks * Multiplier[3]);
-                        }
-                        else if (min == Ctotal)
-                        {
-                            min = min - (weeks * Multiplier[4]);
-                        }
-                        await ReplyAsync(message1 + $"\nThank you, you have fullfilled the required amount :hugging:\n{person_info[0].name}, you got credit for **{Math.Round(min, 0)}** weeks");
+                        await ReplyAsync(message1 + $"\nThank you, you have fullfilled the required amount :hugging:\n{person_info[0].name}, you got credit for **{Math.Round(credit, 0)}** weeks");
                     }
                 }
                 else
