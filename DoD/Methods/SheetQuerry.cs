@@ -112,7 +112,6 @@ namespace DoD
                 {
                     Console.WriteLine("No data found");
                 }
-            }
         }
     }
 }
