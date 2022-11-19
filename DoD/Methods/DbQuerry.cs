@@ -35,7 +35,7 @@ namespace DoD
             List<Data_bank> rss = new List<Data_bank>();
             var context = new DbContext();
             rss = context.data_bank.AsQueryable()
-            .Where(d => d.type.Equals(type) && d.id == userid && d.guild == guild).ToList();
+            .Where(d => d.type.Equals(type) && d.id == userid).ToList();
             Console.WriteLine("inside selectrss");
             return rss;
         }

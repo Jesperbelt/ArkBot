@@ -14,7 +14,6 @@ namespace Table
         public int lineid { get; set; }
         public string name { get; set; }
         public string date { get; set; }
-        public string guild { get; set; }
         public string type { get; set; }
         public double food { get; set; }
         public double parts { get; set; }
