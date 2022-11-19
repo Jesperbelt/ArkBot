@@ -247,7 +247,7 @@ namespace Modules
                         double credit = 0;
                         if (weeks > 0)
                         {
-                            if (min == Ctotal)
+                            if (min == Ftotal)
                             {
                                 credit = min - (weeks * Multiplier[4]);
                             }
@@ -263,14 +263,14 @@ namespace Modules
                             {
                                 credit = min - (weeks * Multiplier[3]);
                             }
-                            else if (min == Ftotal)
+                            else if (min == Ctotal)
                             {
                                 credit = min - (weeks * Multiplier[4]);
                             }
                         }
                         else
                         {
-                            if (min == Ctotal)
+                            if (min == Ftotal)
                             {
                                 credit = min / Multiplier[4];
                             }
@@ -286,7 +286,7 @@ namespace Modules
                             {
                                 credit = min / Multiplier[3];
                             }
-                            else if (min == Ftotal)
+                            else if (min == Ctotal)
                             {
                                 credit = min / Multiplier[4];
                             }
