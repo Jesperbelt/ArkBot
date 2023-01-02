@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:3.1-bullseye-arm64v8
+FROM mcr.microsoft.com/dotnet/sdk:6.0-bullseye-slim-arm64v8
 WORKDIR /source
 
 COPY DoD/*.csproj .
