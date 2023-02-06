@@ -187,5 +187,15 @@ namespace DoD
                 return false;
             }
         }
+        public List<Taxline> SelectTax(string guild)
+        {
+            DbContext.dbname = guild;
+            List<Taxline> taxline = new List<Taxline>();
+            var context = new DbContext();
+            taxline = context.taxline.AsQueryable()
+            .Where(row => row.id > 0)
+            .ToList();
+            return taxline;
+        }
     }
 }

@@ -28,7 +28,9 @@ namespace DoD
             {"SAO", "1n8YMi0_sb1hXphbl1wgO9uNvyHnIVLbWPSBDEJk6GAQ"},
             {"FTW", "1QXIFV40VS1fjpyivxcneQ3aCWcmpv8ji8wyouj7fIiM"},
             {"SHR", "1rodipreQnXxR76qDeg9LzKb_SNp5aFllmukQF7-sbfk"},
-            {"DOM", "1nGxsE2XEZKjRV4voIHNpIIccEjw1yUZOS1UsQuXnQRY"}
+            {"DOM", "1nGxsE2XEZKjRV4voIHNpIIccEjw1yUZOS1UsQuXnQRY"},
+            {"SVW","1Js_cTscRXCJ279kr3jfD5xeHo8Z7vFrQNAs3HbSf5NU"},
+            {"SWO","1EDaQvRErokZUtmxxG80OjK6Y7qjL4YUWKQeiOGGp82U"}
         };
         public static string SpreadsheetId { get; set; }
         static readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };

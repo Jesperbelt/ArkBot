@@ -13,6 +13,8 @@ namespace Context
         public DbSet<Data_bank> data_bank { get; set; }
         public DbSet<Color> color { get; set; }
         public DbSet<Guild> guild { get; set; }
+        public DbSet<Config> config { get; set; }
+        public DbSet<Taxline> taxline { get; set; }
         public static string dbname { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

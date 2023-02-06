@@ -24,6 +24,8 @@ namespace Modules
             n420 = 741474736068100186,
             FTW = 677564139421302834,
             DOM = 730186186114465793,
+            SVW = 1069325222425141258,
+            SWO = 1069325183577501798,
         };
 
         
@@ -46,6 +48,10 @@ namespace Modules
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
             string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            if (sguild == null)
+            {
+                sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id);
+            }
             await ReplyAsync($"This bot has the following commands:\n1. ``!add`` or ``!add @user``\n*Required command to add yourself or @user to the bank bot.*\n2. ``!info`` or ``!info @user``\n*Displays name,startdate and exemption from user that issued the command or user @*\n3. ``!total`` or ``!total @user``\n*Displays total banked in personal*\n4. ``!tracker`` or ``!tracker @user``\n*Displays total banked to guild*\n5. ``!rename name``\n*Rename yourself in the bank bot, BEWARE IF NOT ASKED BY BANKER YOU MAY NOT SEE TOTALS*\n6. ``!gear``\n*Calculate gear stats, issue the command to find how it works*");
         }
         [Command("info")]
@@ -54,7 +60,9 @@ namespace Modules
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
             string name = (string)Context.User.Username;
-            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            string sguild = "";
+            try { sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid); }
+            catch (Exception e) { sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id); };
             Console.WriteLine("Before Info");
             if (!(user == null))
             {
@@ -87,7 +95,9 @@ namespace Modules
         {
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
-            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            string sguild = "";
+            try { sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid); }
+            catch (Exception e) { sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id); };
             if (!(user==null))
             {
                 userid = (long)user.Id;
@@ -143,7 +153,9 @@ namespace Modules
         {
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
-            string sguild = (string)Enum.GetName(typeof(guilds),(ulong)guildid);
+            string sguild = "";
+            try { sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid); }
+            catch (Exception e) { sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id); };
             Console.WriteLine($"{sguild}");
             if (!(user == null))
             {
@@ -155,6 +167,7 @@ namespace Modules
                 List<Table.Color> color = new List<Table.Color>();
                 List<Person_info> person_info = new List<Person_info>();
                 List<Guild> guild = new List<Guild>();
+                List<Taxline> taxline = new List<Taxline>();
             double[] Multiplier = { 1, 1, 1, 1, 1 };
             if (sguild == "DOM")
             {
@@ -180,7 +193,8 @@ namespace Modules
                     color = dbmethod.SelectColor(guildid, sguild);
                     person_info = dbmethod.SelectPersonID(userid, sguild);
                     guild = dbmethod.SelectStartdate(guildid, userid, sguild);
-                foreach(var row in guild)
+                    taxline = dbmethod.SelectTax(sguild);
+                foreach (var row in guild)
                     {
                     Console.WriteLine($"{guild[0].startdate}");
                     }
@@ -274,7 +288,9 @@ namespace Modules
         {
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
-            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            string sguild = "";
+            try { sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid); }
+            catch (Exception e) { sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id); };
 
             SheetQuerry sheetQuerry = new SheetQuerry();
             sheetQuerry.SelectSheet(sguild);
@@ -323,7 +339,9 @@ namespace Modules
         {
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
-            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            string sguild = "";
+            try { sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid); }
+            catch (Exception e) { sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id); };
             dbmethod.DeleteBankData(sguild);
             await ReplyAsync("Tables correctly emptied");
         }
@@ -334,7 +352,9 @@ namespace Modules
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
             string name = (string)Context.User.Username;
-            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            string sguild = "";
+            try { sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid); }
+            catch (Exception e) { sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id); };
             if (!(user == null))
             {
                 userid = (long)user.Id;
@@ -368,7 +388,9 @@ namespace Modules
         {
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
-            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            string sguild = "";
+            try { sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid); }
+            catch(Exception e) { sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id); };
             string[] input = remain.Split(' ', 2);
             if (input.Length > 1)
             {
@@ -461,7 +483,7 @@ namespace Modules
         {
             if(true)
             {
-                await ReplyAsync($"Failed to exempt");
+                await ReplyAsync($"Work in progress");
             }
             else
             {
