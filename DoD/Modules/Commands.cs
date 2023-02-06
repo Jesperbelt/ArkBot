@@ -51,6 +51,7 @@ namespace Modules
             if (sguild == null)
             {
                 sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id);
+                guildid = (long)Context.Guild.Id;
             }
             await ReplyAsync($"This bot has the following commands:\n1. ``!add`` or ``!add @user``\n*Required command to add yourself or @user to the bank bot.*\n2. ``!info`` or ``!info @user``\n*Displays name,startdate and exemption from user that issued the command or user @*\n3. ``!total`` or ``!total @user``\n*Displays total banked in personal*\n4. ``!tracker`` or ``!tracker @user``\n*Displays total banked to guild*\n5. ``!rename name``\n*Rename yourself in the bank bot, BEWARE IF NOT ASKED BY BANKER YOU MAY NOT SEE TOTALS*\n6. ``!gear``\n*Calculate gear stats, issue the command to find how it works*");
         }
@@ -64,6 +65,7 @@ namespace Modules
             if (sguild == null)
             {
                 sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id);
+                guildid = (long)Context.Guild.Id;
             }
             Console.WriteLine("Before Info");
             if (!(user == null))
@@ -101,6 +103,7 @@ namespace Modules
             if (sguild == null)
             {
                 sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id);
+                guildid = (long)Context.Guild.Id;
             }
             if (!(user==null))
             {
@@ -161,6 +164,7 @@ namespace Modules
             if (sguild == null)
             {
                 sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id);
+                guildid = (long)Context.Guild.Id;
             }
             Console.WriteLine($"{sguild}");
             if (!(user == null))
@@ -192,6 +196,15 @@ namespace Modules
                 Multiplier[2] = 3;
                 Multiplier[3] = 3;
                 Multiplier[4] = 3;
+            }
+            if (sguild == "SVW"| sguild == "SWO")
+            {
+                Console.WriteLine("Set SVW & SWO multiplier");
+                Multiplier[0] = 2;
+                Multiplier[1] = 2;
+                Multiplier[2] = 2;
+                Multiplier[3] = 2;
+                Multiplier[4] = 2;
             }
             try
                 {
@@ -298,6 +311,7 @@ namespace Modules
             if (sguild == null)
             {
                 sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id);
+                guildid = (long)Context.Guild.Id;
             }
 
             SheetQuerry sheetQuerry = new SheetQuerry();
@@ -351,6 +365,7 @@ namespace Modules
             if (sguild == null)
             {
                 sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id);
+                guildid = (long)Context.Guild.Id;
             }
             dbmethod.DeleteBankData(sguild);
             await ReplyAsync("Tables correctly emptied");
@@ -366,6 +381,7 @@ namespace Modules
             if (sguild == null)
             {
                 sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id);
+                guildid = (long)Context.Guild.Id;
             }
             if (!(user == null))
             {
@@ -404,6 +420,7 @@ namespace Modules
             if (sguild == null)
             {
                 sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id);
+                guildid = (long)Context.Guild.Id;
             }
             string[] input = remain.Split(' ', 2);
             if (input.Length > 1)
