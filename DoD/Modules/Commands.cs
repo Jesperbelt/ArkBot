@@ -60,9 +60,11 @@ namespace Modules
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
             string name = (string)Context.User.Username;
-            string sguild = "";
-            try { sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid); }
-            catch (Exception e) { sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id); };
+            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            if (sguild == null)
+            {
+                sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id);
+            }
             Console.WriteLine("Before Info");
             if (!(user == null))
             {
@@ -95,9 +97,11 @@ namespace Modules
         {
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
-            string sguild = "";
-            try { sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid); }
-            catch (Exception e) { sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id); };
+            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            if (sguild == null)
+            {
+                sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id);
+            }
             if (!(user==null))
             {
                 userid = (long)user.Id;
@@ -153,9 +157,11 @@ namespace Modules
         {
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
-            string sguild = "";
-            try { sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid); }
-            catch (Exception e) { sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id); };
+            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            if (sguild == null)
+            {
+                sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id);
+            }
             Console.WriteLine($"{sguild}");
             if (!(user == null))
             {
@@ -288,9 +294,11 @@ namespace Modules
         {
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
-            string sguild = "";
-            try { sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid); }
-            catch (Exception e) { sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id); };
+            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            if (sguild == null)
+            {
+                sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id);
+            }
 
             SheetQuerry sheetQuerry = new SheetQuerry();
             sheetQuerry.SelectSheet(sguild);
@@ -339,9 +347,11 @@ namespace Modules
         {
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
-            string sguild = "";
-            try { sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid); }
-            catch (Exception e) { sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id); };
+            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            if (sguild == null)
+            {
+                sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id);
+            }
             dbmethod.DeleteBankData(sguild);
             await ReplyAsync("Tables correctly emptied");
         }
@@ -352,9 +362,11 @@ namespace Modules
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
             string name = (string)Context.User.Username;
-            string sguild = "";
-            try { sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid); }
-            catch (Exception e) { sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id); };
+            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            if (sguild == null)
+            {
+                sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id);
+            }
             if (!(user == null))
             {
                 userid = (long)user.Id;
@@ -388,9 +400,11 @@ namespace Modules
         {
             long userid = (long)Context.User.Id;
             long guildid = (long)Context.Guild.Id;
-            string sguild = "";
-            try { sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid); }
-            catch(Exception e) { sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id); };
+            string sguild = (string)Enum.GetName(typeof(guilds), (ulong)guildid);
+            if (sguild == null)
+            {
+                sguild = (string)Enum.GetName(typeof(guilds), (long)Context.Channel.Id);
+            }
             string[] input = remain.Split(' ', 2);
             if (input.Length > 1)
             {
