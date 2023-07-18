@@ -30,7 +30,7 @@ namespace DoD
             {"SHR", "1rodipreQnXxR76qDeg9LzKb_SNp5aFllmukQF7-sbfk"},
             {"DOM", "1nGxsE2XEZKjRV4voIHNpIIccEjw1yUZOS1UsQuXnQRY"},
             {"SVW","1Js_cTscRXCJ279kr3jfD5xeHo8Z7vFrQNAs3HbSf5NU"},
-            {"SWO","1EDaQvRErokZUtmxxG80OjK6Y7qjL4YUWKQeiOGGp82U"}
+            {"SWO","1GgshUNLjKDByd1ydCAd73Uf3BdZQmdx6kcQjkgOyASc"}
         };
         public static string SpreadsheetId { get; set; }
         static readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };
@@ -71,7 +71,8 @@ namespace DoD
         void updateDB(string guild)
         {
             int max = dbmethod.SelectLineId(guild);
-            max = max + 2;
+            if(guild=="SWO"){max=max+8;}
+            else{max=max+2;}
             Console.WriteLine(max);
                 var range = $"{sheet}!A{max}:J5757";
                 var request = service.Spreadsheets.Values.Get(SpreadsheetId, range);
@@ -83,30 +84,56 @@ namespace DoD
                     {
                         Console.WriteLine($"{row[0]} | {row[1]} | {row[2]} | {row[3]} | {row[4]} | {row[5]} | {row[6]} | {row[7]} | {row[8]} | {row[9]}");
                         List<Person_info> temp = new List<Person_info>();
-                        temp = dbmethod.SelectPersonName(guild, (string)row[1]);
+                        temp = dbmethod.SelectPersonName(guild, (string)row[0]);
                         long? id = null;
                         if (temp.Count > 0)
                         {
                             id = temp[0].id;
                         }
+                        int lineNr=0;
+                        if(guild=="SWO"){
+                            lineNr=max;
+                        } else{
+                          lineNr=Int32.Parse((string)row[0]);
+                        }
                         var context = new DbContext();
                         DbContext.dbname = guild;
-                        var std = new Data_bank()
-                        {
-                            id = id,
-                            lineid = Int32.Parse((string)row[0]),
-                            name = (string)row[1],
-                            date = (string)row[2],
-                            type = (string)row[3],
-                            food = Double.Parse((string)row[4]),
-                            parts = Double.Parse((string)row[5]),
-                            electric = Double.Parse((string)row[6]),
-                            gas = Double.Parse((string)row[7]),
-                            cash = Double.Parse((string)row[8]),
-                            shadow = Double.Parse((string)row[9]),
-                        };
-                        context.data_bank.Add(std);
-                        context.SaveChanges();
+                        if(guild=="SWO"){
+                            var std = new Data_bank()
+                            {
+                                id = id,
+                                lineid = lineNr,
+                                name = (string)row[0],
+                                date = (string)row[9],
+                                type = "Guild",
+                                food = Double.Parse((string)row[1]),
+                                parts = Double.Parse((string)row[2]),
+                                electric = Double.Parse((string)row[3]),
+                                gas = Double.Parse((string)row[4]),
+                                cash = Double.Parse((string)row[5]),
+                                shadow = 0,
+                            };
+                            context.data_bank.Add(std);
+                            context.SaveChanges();
+                        } else{
+                            var std = new Data_bank()
+                            {
+                                id = id,
+                                lineid = lineNr,
+                                name = (string)row[1],
+                                date = (string)row[2],
+                                type = (string)row[3],
+                                food = Double.Parse((string)row[4]),
+                                parts = Double.Parse((string)row[5]),
+                                electric = Double.Parse((string)row[6]),
+                                gas = Double.Parse((string)row[7]),
+                                cash = Double.Parse((string)row[8]),
+                                shadow = Double.Parse((string)row[9]),
+                            };
+                            context.data_bank.Add(std);
+                            context.SaveChanges();
+                        }
+                        max=+1;
                     }
                     then = DateTime.Now.AddHours(1);
                 }
