@@ -71,8 +71,13 @@ namespace DoD
         void updateDB(string guild)
         {
             int max = dbmethod.SelectLineId(guild);
-            if(guild=="SWO"){max=max+8;}
-            else{max=max+2;}
+            if(guild=="SWO"&max==0){
+                max=8;
+            } else if(guild=="SWO"&max>0){
+                max=max+8;
+            } else{
+                max=max+2;
+            }
             Console.WriteLine(max);
                 var range = $"{sheet}!A{max}:J5757";
                 var request = service.Spreadsheets.Values.Get(SpreadsheetId, range);
@@ -80,21 +85,23 @@ namespace DoD
                 var values = response.Values;
                 if (values != null && values.Count > 0)
                 {
+                    int count = 1;
                     foreach (var row in values)
                     {
                         Console.WriteLine($"{row[0]} | {row[1]} | {row[2]} | {row[3]} | {row[4]} | {row[5]} | {row[6]} | {row[7]} | {row[8]} | {row[9]}");
                         List<Person_info> temp = new List<Person_info>();
-                        temp = dbmethod.SelectPersonName(guild, (string)row[0]);
+                        int lineNr=0;
+                        if(guild=="SWO"){
+                            lineNr = count;
+                            temp = dbmethod.SelectPersonName(guild, (string)row[0]);
+                        } else{
+                          lineNr=Int32.Parse((string)row[0]);
+                          temp = dbmethod.SelectPersonName(guild, (string)row[1]);
+                        }
                         long? id = null;
                         if (temp.Count > 0)
                         {
                             id = temp[0].id;
-                        }
-                        int lineNr=0;
-                        if(guild=="SWO"){
-                            lineNr=max;
-                        } else{
-                          lineNr=Int32.Parse((string)row[0]);
                         }
                         var context = new DbContext();
                         DbContext.dbname = guild;
@@ -133,7 +140,7 @@ namespace DoD
                             context.data_bank.Add(std);
                             context.SaveChanges();
                         }
-                        max=+1;
+                        count = count + 1;
                     }
                     then = DateTime.Now.AddHours(1);
                 }
