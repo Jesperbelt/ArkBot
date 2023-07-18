@@ -16,7 +16,6 @@ namespace Modules
     {
         public enum guilds : ulong
         {
-            DoD = 684822117618811140,
             SHR = 1024869376085737533,
             SAO = 772805666280308757,
             VAL = 900773269504942191,
