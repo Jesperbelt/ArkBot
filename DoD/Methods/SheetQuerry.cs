@@ -109,14 +109,14 @@ namespace DoD
                             {
                                 id = id,
                                 lineid = lineNr,
-                                name = (string)row[0],
-                                date = (string)row[9],
+                                name = (string)row[1],
+                                date = (string)row[8],
                                 type = "Guild",
-                                food = Double.Parse((string)row[1]),
-                                parts = Double.Parse((string)row[2]),
-                                electric = Double.Parse((string)row[3]),
-                                gas = Double.Parse((string)row[4]),
-                                cash = Double.Parse((string)row[5]),
+                                food = Double.Parse((string)row[2]),
+                                parts = Double.Parse((string)row[3]),
+                                electric = Double.Parse((string)row[4]),
+                                gas = Double.Parse((string)row[5]),
+                                cash = Double.Parse((string)row[6]),
                                 shadow = 0,
                             };
                             context.data_bank.Add(std);
