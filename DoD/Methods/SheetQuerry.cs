@@ -92,7 +92,7 @@ namespace DoD
                         int lineNr=0;
                         if(guild=="SWO"){
                             lineNr = count;
-                            temp = dbmethod.SelectPersonName(guild, (string)row[0]);
+                            temp = dbmethod.SelectPersonName(guild, (string)row[1]);
                         } else{
                           lineNr=Int32.Parse((string)row[0]);
                           temp = dbmethod.SelectPersonName(guild, (string)row[1]);
