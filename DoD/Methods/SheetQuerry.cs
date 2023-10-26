@@ -70,13 +70,7 @@ namespace DoD
         void updateDB(string guild)
         {
             int max = dbmethod.SelectLineId(guild);
-            if(guild=="SWO"&max==0){
-                max=8;
-            } else if(guild=="SWO"&max>0){
-                max=max+8;
-            } else{
-                max=max+2;
-            }
+            max=max+2;
             Console.WriteLine(max);
                 var range = $"{sheet}!A{max}:J5757";
                 var request = service.Spreadsheets.Values.Get(SpreadsheetId, range);
@@ -90,13 +84,8 @@ namespace DoD
                         Console.WriteLine($"{row[0]} | {row[1]} | {row[2]} | {row[3]} | {row[4]} | {row[5]} | {row[6]} | {row[7]} | {row[8]} | {row[9]}");
                         List<Person_info> temp = new List<Person_info>();
                         int lineNr=0;
-                        if(guild=="SWO"){
-                            lineNr = count;
-                            temp = dbmethod.SelectPersonName(guild, (string)row[1]);
-                        } else{
-                          lineNr=Int32.Parse((string)row[0]);
-                          temp = dbmethod.SelectPersonName(guild, (string)row[1]);
-                        }
+                        lineNr=Int32.Parse((string)row[0]);
+                        temp = dbmethod.SelectPersonName(guild, (string)row[1]);
                         long? id = null;
                         if (temp.Count > 0)
                         {
@@ -104,24 +93,6 @@ namespace DoD
                         }
                         var context = new DbContext();
                         DbContext.dbname = guild;
-                        if(guild=="SWO"){
-                            var std = new Data_bank()
-                            {
-                                id = id,
-                                lineid = lineNr,
-                                name = (string)row[1],
-                                date = (string)row[8],
-                                type = "Guild",
-                                food = Double.Parse((string)row[2]),
-                                parts = Double.Parse((string)row[3]),
-                                electric = Double.Parse((string)row[4]),
-                                gas = Double.Parse((string)row[5]),
-                                cash = Double.Parse((string)row[6]),
-                                shadow = 0,
-                            };
-                            context.data_bank.Add(std);
-                            context.SaveChanges();
-                        } else{
                             var std = new Data_bank()
                             {
                                 id = id,
@@ -138,7 +109,7 @@ namespace DoD
                             };
                             context.data_bank.Add(std);
                             context.SaveChanges();
-                        }
+                        
                         count = count + 1;
                     }
                     then = DateTime.Now.AddHours(1);
