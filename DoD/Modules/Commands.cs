@@ -196,9 +196,18 @@ namespace Modules
                 Multiplier[3] = 3;
                 Multiplier[4] = 3;
             }
-            if (sguild == "SVW"| sguild == "SWO")
+            if (sguild == "SVW")
             {
-                Console.WriteLine("Set SVW & SWO multiplier");
+                Console.WriteLine("Set SVW multiplier");
+                Multiplier[0] = 3;
+                Multiplier[1] = 3;
+                Multiplier[2] = 3;
+                Multiplier[3] = 3;
+                Multiplier[4] = 3;
+            }
+            if (sguild == "SWO")
+            {
+                Console.WriteLine("Set SWO multiplier");
                 Multiplier[0] = 2;
                 Multiplier[1] = 2;
                 Multiplier[2] = 2;
